@@ -17,7 +17,7 @@ func TestParse(t *testing.T) {
 
 func TestStringify(t *testing.T) {
 	elements := []MessageELement{
-		&MessageElementContent{
+		&MessageElementText{
 			Content: "我是纯文本",
 		},
 		&MessageElementAt{

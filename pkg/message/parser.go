@@ -125,7 +125,7 @@ func parseHtmlNode(n *html.Node, callback func(e MessageELement)) error {
 	} else if n.Type == html.TextNode {
 		content := strings.TrimSpace(n.Data)
 		if content != "" {
-			callback(&MessageElementContent{
+			callback(&MessageElementText{
 				Content: content,
 			})
 		}

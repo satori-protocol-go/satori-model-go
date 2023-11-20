@@ -9,15 +9,15 @@ type MessageELement interface {
 	Stringify() string
 }
 
-type MessageElementContent struct {
+type MessageElementText struct {
 	Content string
 }
 
-func (e *MessageElementContent) Tag() string {
-	return "content"
+func (e *MessageElementText) Tag() string {
+	return "text"
 }
 
-func (e *MessageElementContent) Stringify() string {
+func (e *MessageElementText) Stringify() string {
 	return e.Content
 }
 
