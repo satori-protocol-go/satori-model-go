@@ -1,10 +1,8 @@
-package parser
+package message
 
 import (
 	"fmt"
 	"testing"
-
-	"github.com/dezhishen/satori-model-go/pkg/message"
 )
 
 func TestParse(t *testing.T) {
@@ -18,17 +16,17 @@ func TestParse(t *testing.T) {
 }
 
 func TestStringify(t *testing.T) {
-	elements := []message.MessageELement{
-		&message.MessageElementContent{
+	elements := []MessageELement{
+		&MessageElementContent{
 			Content: "我是纯文本",
 		},
-		&message.MessageElementAt{
+		&MessageElementAt{
 			Id:   "test",
 			Name: "test",
 			Role: "test",
 			Type: "",
 		},
-		&message.MessageElementAudio{
+		&MessageElementAudio{
 			Src:     "https://127.0.0.1/mp3.mp3",
 			Cache:   false,
 			Timeout: "",

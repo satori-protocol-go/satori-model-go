@@ -1,4 +1,4 @@
-package parser
+package message
 
 import (
 	"bytes"
@@ -6,11 +6,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/dezhishen/satori-model-go/pkg/message"
 	"golang.org/x/net/html"
 )
 
-type messageElemenParser func(n *html.Node) (message.MessageELement, error)
+type messageElemenParser func(n *html.Node) (MessageELement, error)
 
 var parserOfTag = make(map[string]messageElemenParser)
 
@@ -21,32 +20,33 @@ func attrList2Map(attrs []html.Attribute) map[string]html.Attribute {
 	}
 	return result
 }
+
 func init() {
-	parserOfTag["at"] = func(n *html.Node) (message.MessageELement, error) {
+	parserOfTag["at"] = func(n *html.Node) (MessageELement, error) {
 		attrMap := attrList2Map(n.Attr)
-		return &message.MessageElementAt{
+		return &MessageElementAt{
 			Id:   attrMap["id"].Val,
 			Name: attrMap["name"].Val,
 			Role: attrMap["role"].Val,
 			Type: attrMap["type"].Val,
 		}, nil
 	}
-	parserOfTag["sharp"] = func(n *html.Node) (message.MessageELement, error) {
+	parserOfTag["sharp"] = func(n *html.Node) (MessageELement, error) {
 		attrMap := attrList2Map(n.Attr)
-		return &message.MessageElementSharp{
+		return &MessageElementSharp{
 			Id:   attrMap["id"].Val,
 			Name: attrMap["name"].Val,
 		}, nil
 	}
-	parserOfTag["a"] = func(n *html.Node) (message.MessageELement, error) {
+	parserOfTag["a"] = func(n *html.Node) (MessageELement, error) {
 		attrMap := attrList2Map(n.Attr)
-		return &message.MessageElementA{
+		return &MessageElementA{
 			Href: attrMap["href"].Val,
 		}, nil
 	}
-	parserOfTag["img"] = func(n *html.Node) (message.MessageELement, error) {
+	parserOfTag["img"] = func(n *html.Node) (MessageELement, error) {
 		attrMap := attrList2Map(n.Attr)
-		result := &message.MessageElementImg{
+		result := &MessageElementImg{
 			Src:     attrMap["src"].Val,
 			Cache:   false,
 			Timeout: attrMap["timeout"].Val,
@@ -71,9 +71,9 @@ func init() {
 		}
 		return result, nil
 	}
-	parserOfTag["audio"] = func(n *html.Node) (message.MessageELement, error) {
+	parserOfTag["audio"] = func(n *html.Node) (MessageELement, error) {
 		attrMap := attrList2Map(n.Attr)
-		result := &message.MessageElementAudio{
+		result := &MessageElementAudio{
 			Src:     attrMap["src"].Val,
 			Cache:   false,
 			Timeout: attrMap["timeout"].Val,
@@ -84,9 +84,9 @@ func init() {
 		}
 		return result, nil
 	}
-	parserOfTag["video"] = func(n *html.Node) (message.MessageELement, error) {
+	parserOfTag["video"] = func(n *html.Node) (MessageELement, error) {
 		attrMap := attrList2Map(n.Attr)
-		result := &message.MessageElementVedio{
+		result := &MessageElementVedio{
 			Src:     attrMap["src"].Val,
 			Cache:   false,
 			Timeout: attrMap["timeout"].Val,
@@ -97,9 +97,9 @@ func init() {
 		}
 		return result, nil
 	}
-	parserOfTag["file"] = func(n *html.Node) (message.MessageELement, error) {
+	parserOfTag["file"] = func(n *html.Node) (MessageELement, error) {
 		attrMap := attrList2Map(n.Attr)
-		result := &message.MessageElementFile{
+		result := &MessageElementFile{
 			Src:     attrMap["src"].Val,
 			Cache:   false,
 			Timeout: attrMap["timeout"].Val,
@@ -112,7 +112,7 @@ func init() {
 	}
 }
 
-func parseHtmlNode(n *html.Node, callback func(e message.MessageELement)) error {
+func parseHtmlNode(n *html.Node, callback func(e MessageELement)) error {
 	if n.Type == html.ElementNode {
 		parserOfTagFunc, ok := parserOfTag[n.Data]
 		if ok {
@@ -125,7 +125,7 @@ func parseHtmlNode(n *html.Node, callback func(e message.MessageELement)) error 
 	} else if n.Type == html.TextNode {
 		content := strings.TrimSpace(n.Data)
 		if content != "" {
-			callback(&message.MessageElementContent{
+			callback(&MessageElementContent{
 				Content: content,
 			})
 		}
@@ -139,10 +139,10 @@ func parseHtmlNode(n *html.Node, callback func(e message.MessageELement)) error 
 	return nil
 }
 
-func Parse(source string) ([]message.MessageELement, error) {
+func Parse(source string) ([]MessageELement, error) {
 	doc, _ := html.Parse(bytes.NewReader([]byte(source)))
-	var result []message.MessageELement
-	err := parseHtmlNode(doc, func(e message.MessageELement) {
+	var result []MessageELement
+	err := parseHtmlNode(doc, func(e MessageELement) {
 		if e != nil {
 			result = append(result, e)
 		}
@@ -153,6 +153,6 @@ func Parse(source string) ([]message.MessageELement, error) {
 	return result, nil
 }
 
-func Stringify([]message.MessageELement) (string, error) {
+func Stringify([]MessageELement) (string, error) {
 	return "", nil
 }

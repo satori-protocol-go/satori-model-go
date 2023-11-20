@@ -23,24 +23,18 @@ type MessageList struct {
 	Next string    `json:"next,omitempty"`
 }
 
-type MessageContent struct {
-	Text     string
-	Elements []MessageElement
-}
-
-type MessageElement interface {
-	Tag() string
-}
-
-func (m *Message) Decode(content *MessageContent) error {
-	raw, err := messageContent2RawMessage(content)
-	if err != nil {
-		return err
+func (m *Message) Decode(elements []MessageELement) error {
+	raw := ""
+	for _, e := range elements {
+		raw += e.Stringify()
 	}
 	m.Content = raw
 	return nil
 }
 
-func (m *Message) Encode() (*MessageContent, error) {
-	return rawMessage2MessageContent(m.Content)
+func (m *Message) Encode() ([]MessageELement, error) {
+	if m.Content == "" {
+		return nil, nil
+	}
+	return Parse(m.Content)
 }
