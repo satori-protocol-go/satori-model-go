@@ -32,9 +32,11 @@ func init() {
 }
 
 func parseHtmlNode(n *html.Node, callback func(e MessageELement)) error {
+	parsed := false
 	if n.Type == html.ElementNode {
-		parserOfTagFunc, ok := _parserOfTag[n.Data]
-		if ok {
+		var parserOfTagFunc messageElemenParser
+		parserOfTagFunc, parsed = _parserOfTag[n.Data]
+		if parsed {
 			e, err := parserOfTagFunc(n)
 			if err != nil {
 				return err
@@ -48,7 +50,14 @@ func parseHtmlNode(n *html.Node, callback func(e MessageELement)) error {
 				Content: content,
 			})
 		}
+		parsed = true
 	}
+	if !parsed {
+		parseHtmlChildrenNode(n, callback)
+	}
+	return nil
+}
+func parseHtmlChildrenNode(n *html.Node, callback func(e MessageELement)) error {
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
 		err := parseHtmlNode(c, callback)
 		if err != nil {

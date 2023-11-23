@@ -7,7 +7,7 @@ import (
 
 func TestParse(t *testing.T) {
 	elements, _ := Parse(
-		`我是纯文本1<at id="1" name="123456" />我是纯文本2<at id="2" name="123456" />`)
+		`我是纯文本<b>我是加粗文本<b>套娃<b>套娃中的套娃</b></b>我是123</b>`)
 	s := ""
 	for _, e := range elements {
 		s += e.Stringify()
@@ -16,22 +16,8 @@ func TestParse(t *testing.T) {
 }
 
 func TestStringify(t *testing.T) {
-	elements := []MessageELement{
-		&MessageElementText{
-			Content: "我是纯文本",
-		},
-		&MessageElementAt{
-			Id:   "test",
-			Name: "test",
-			Role: "test",
-			Type: "",
-		},
-		&MessageElementAudio{
-			Src:     "https://127.0.0.1/mp3.mp3",
-			Cache:   false,
-			Timeout: "",
-		},
-	}
+	elements, _ := Parse(
+		`我是纯文本<b>我是加粗文本<b>套娃<b>套娃中的套娃</b></b>我是123</b>`)
 	s := ""
 	for _, e := range elements {
 		s += e.Stringify()

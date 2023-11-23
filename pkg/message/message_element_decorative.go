@@ -101,7 +101,18 @@ func (e *MessageELementSub) Stringify() string {
 
 func init() {
 	regsiterParserMulti([]string{"b", "strong"}, func(n *html.Node) (MessageELement, error) {
-		return nil, nil
+		var children []MessageELement
+		err := parseHtmlChildrenNode(n, func(e MessageELement) {
+			children = append(children, e)
+		})
+		if err != nil {
+			return nil, err
+		}
+		return &MessageElementStrong{
+			&childrenMessageElement{
+				Children: children,
+			},
+		}, nil
 	})
 	regsiterParserMulti([]string{"i", "em"}, func(n *html.Node) (MessageELement, error) {
 		return nil, nil
