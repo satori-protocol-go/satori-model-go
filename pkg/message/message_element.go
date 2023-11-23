@@ -1,6 +1,6 @@
 package message
 
-type MessageELement interface {
+type MessageElement interface {
 	Tag() string
 	Stringify() string
 	Alias() []string
@@ -14,7 +14,7 @@ func (e *noAliasMessageElement) Alias() []string {
 }
 
 type childrenMessageElement struct {
-	Children []MessageELement
+	Children []MessageElement
 }
 
 func (e *childrenMessageElement) stringifyChildren() string {

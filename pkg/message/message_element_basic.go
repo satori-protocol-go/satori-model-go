@@ -83,7 +83,7 @@ func (e *MessageElementA) Stringify() string {
 }
 
 func init() {
-	regsiterParser("at", func(n *html.Node) (MessageELement, error) {
+	regsiterParser("at", func(n *html.Node) (MessageElement, error) {
 		attrMap := attrList2Map(n.Attr)
 		return &MessageElementAt{
 			Id:   attrMap["id"].Val,
@@ -92,14 +92,14 @@ func init() {
 			Type: attrMap["type"].Val,
 		}, nil
 	})
-	regsiterParser("sharp", func(n *html.Node) (MessageELement, error) {
+	regsiterParser("sharp", func(n *html.Node) (MessageElement, error) {
 		attrMap := attrList2Map(n.Attr)
 		return &MessageElementSharp{
 			Id:   attrMap["id"].Val,
 			Name: attrMap["name"].Val,
 		}, nil
 	})
-	regsiterParser("a", func(n *html.Node) (MessageELement, error) {
+	regsiterParser("a", func(n *html.Node) (MessageElement, error) {
 		attrMap := attrList2Map(n.Attr)
 		return &MessageElementA{
 			Href: attrMap["href"].Val,

@@ -7,7 +7,7 @@ import (
 	"golang.org/x/net/html"
 )
 
-type messageElemenParser func(n *html.Node) (MessageELement, error)
+type messageElemenParser func(n *html.Node) (MessageElement, error)
 
 var _parserOfTag = make(map[string]messageElemenParser)
 
@@ -31,7 +31,7 @@ func regsiterParserMulti(tags []string, parserFunc messageElemenParser) {
 func init() {
 }
 
-func parseHtmlNode(n *html.Node, callback func(e MessageELement)) error {
+func parseHtmlNode(n *html.Node, callback func(e MessageElement)) error {
 	parsed := false
 	if n.Type == html.ElementNode {
 		var parserOfTagFunc messageElemenParser
@@ -57,7 +57,7 @@ func parseHtmlNode(n *html.Node, callback func(e MessageELement)) error {
 	}
 	return nil
 }
-func parseHtmlChildrenNode(n *html.Node, callback func(e MessageELement)) error {
+func parseHtmlChildrenNode(n *html.Node, callback func(e MessageElement)) error {
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
 		err := parseHtmlNode(c, callback)
 		if err != nil {
@@ -67,10 +67,10 @@ func parseHtmlChildrenNode(n *html.Node, callback func(e MessageELement)) error 
 	return nil
 }
 
-func Parse(source string) ([]MessageELement, error) {
+func Parse(source string) ([]MessageElement, error) {
 	doc, _ := html.Parse(bytes.NewReader([]byte(source)))
-	var result []MessageELement
-	err := parseHtmlNode(doc, func(e MessageELement) {
+	var result []MessageElement
+	err := parseHtmlNode(doc, func(e MessageElement) {
 		if e != nil {
 			result = append(result, e)
 		}
@@ -81,6 +81,6 @@ func Parse(source string) ([]MessageELement, error) {
 	return result, nil
 }
 
-func Stringify([]MessageELement) (string, error) {
+func Stringify([]MessageElement) (string, error) {
 	return "", nil
 }

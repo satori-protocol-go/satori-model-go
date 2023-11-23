@@ -115,7 +115,7 @@ func (e *MessageElementFile) Stringify() string {
 }
 
 func init() {
-	regsiterParser("img", func(n *html.Node) (MessageELement, error) {
+	regsiterParser("img", func(n *html.Node) (MessageElement, error) {
 		attrMap := attrList2Map(n.Attr)
 		result := &MessageElementImg{
 			Src:     attrMap["src"].Val,
@@ -142,7 +142,7 @@ func init() {
 		}
 		return result, nil
 	})
-	regsiterParser("audio", func(n *html.Node) (MessageELement, error) {
+	regsiterParser("audio", func(n *html.Node) (MessageElement, error) {
 		attrMap := attrList2Map(n.Attr)
 		result := &MessageElementAudio{
 			Src:     attrMap["src"].Val,
@@ -155,7 +155,7 @@ func init() {
 		}
 		return result, nil
 	})
-	regsiterParser("video", func(n *html.Node) (MessageELement, error) {
+	regsiterParser("video", func(n *html.Node) (MessageElement, error) {
 		attrMap := attrList2Map(n.Attr)
 		result := &MessageElementVedio{
 			Src:     attrMap["src"].Val,
@@ -168,7 +168,7 @@ func init() {
 		}
 		return result, nil
 	})
-	regsiterParser("file", func(n *html.Node) (MessageELement, error) {
+	regsiterParser("file", func(n *html.Node) (MessageElement, error) {
 		attrMap := attrList2Map(n.Attr)
 		result := &MessageElementFile{
 			Src:     attrMap["src"].Val,

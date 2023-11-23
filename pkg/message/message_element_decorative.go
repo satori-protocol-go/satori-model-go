@@ -1,6 +1,8 @@
 package message
 
-import "golang.org/x/net/html"
+import (
+	"golang.org/x/net/html"
+)
 
 type MessageElementStrong struct {
 	*childrenMessageElement
@@ -60,49 +62,49 @@ func (e *MessageElementSpl) Stringify() string {
 	return e.stringifyByTag(e.Tag())
 }
 
-type MessageELementCode struct {
+type MessageElementCode struct {
 	*childrenMessageElement
 	*noAliasMessageElement
 }
 
-func (e *MessageELementCode) Tag() string {
+func (e *MessageElementCode) Tag() string {
 	return "code"
 }
 
-func (e *MessageELementCode) Stringify() string {
+func (e *MessageElementCode) Stringify() string {
 	return e.stringifyByTag(e.Tag())
 }
 
-type MessageELementSup struct {
+type MessageElementSup struct {
 	*childrenMessageElement
 	*noAliasMessageElement
 }
 
-func (e *MessageELementSup) Tag() string {
+func (e *MessageElementSup) Tag() string {
 	return "sup"
 }
 
-func (e *MessageELementSup) Stringify() string {
+func (e *MessageElementSup) Stringify() string {
 	return e.stringifyByTag(e.Tag())
 }
 
-type MessageELementSub struct {
+type MessageElementSub struct {
 	*childrenMessageElement
 	*noAliasMessageElement
 }
 
-func (e *MessageELementSub) Tag() string {
+func (e *MessageElementSub) Tag() string {
 	return "sub"
 }
 
-func (e *MessageELementSub) Stringify() string {
+func (e *MessageElementSub) Stringify() string {
 	return e.stringifyByTag(e.Tag())
 }
 
 func init() {
-	regsiterParserMulti([]string{"b", "strong"}, func(n *html.Node) (MessageELement, error) {
-		var children []MessageELement
-		err := parseHtmlChildrenNode(n, func(e MessageELement) {
+	regsiterParserMulti([]string{"b", "strong"}, func(n *html.Node) (MessageElement, error) {
+		var children []MessageElement
+		err := parseHtmlChildrenNode(n, func(e MessageElement) {
 			children = append(children, e)
 		})
 		if err != nil {
@@ -114,20 +116,75 @@ func init() {
 			},
 		}, nil
 	})
-	regsiterParserMulti([]string{"i", "em"}, func(n *html.Node) (MessageELement, error) {
-		return nil, nil
+	regsiterParserMulti([]string{"i", "em"}, func(n *html.Node) (MessageElement, error) {
+		var children []MessageElement
+		err := parseHtmlChildrenNode(n, func(e MessageElement) {
+			children = append(children, e)
+		})
+		if err != nil {
+			return nil, err
+		}
+		return &MessageElementEm{
+			&childrenMessageElement{
+				Children: children,
+			},
+		}, nil
 	})
-	regsiterParserMulti([]string{"s", "ins"}, func(n *html.Node) (MessageELement, error) {
-		return nil, nil
+	regsiterParserMulti([]string{"s", "ins"}, func(n *html.Node) (MessageElement, error) {
+		var children []MessageElement
+		err := parseHtmlChildrenNode(n, func(e MessageElement) {
+			children = append(children, e)
+		})
+		if err != nil {
+			return nil, err
+		}
+		return &MessageElementIns{
+			&childrenMessageElement{
+				Children: children,
+			},
+		}, nil
 	})
-	regsiterParser("spl", func(n *html.Node) (MessageELement, error) {
-		return nil, nil
+	regsiterParser("spl", func(n *html.Node) (MessageElement, error) {
+		var children []MessageElement
+		err := parseHtmlChildrenNode(n, func(e MessageElement) {
+			children = append(children, e)
+		})
+		if err != nil {
+			return nil, err
+		}
+		return &MessageElementSpl{
+			childrenMessageElement: &childrenMessageElement{
+				Children: children,
+			},
+		}, nil
 	})
-	regsiterParser("code", func(n *html.Node) (MessageELement, error) {
-		return nil, nil
+	regsiterParser("code", func(n *html.Node) (MessageElement, error) {
+		var children []MessageElement
+		err := parseHtmlChildrenNode(n, func(e MessageElement) {
+			children = append(children, e)
+		})
+		if err != nil {
+			return nil, err
+		}
+		return &MessageElementSpl{
+			childrenMessageElement: &childrenMessageElement{
+				Children: children,
+			},
+		}, nil
 	})
-	regsiterParser("sup", func(n *html.Node) (MessageELement, error) {
-		return nil, nil
+	regsiterParser("sup", func(n *html.Node) (MessageElement, error) {
+		var children []MessageElement
+		err := parseHtmlChildrenNode(n, func(e MessageElement) {
+			children = append(children, e)
+		})
+		if err != nil {
+			return nil, err
+		}
+		return &MessageElementSub{
+			childrenMessageElement: &childrenMessageElement{
+				Children: children,
+			},
+		}, nil
 	})
 
 }

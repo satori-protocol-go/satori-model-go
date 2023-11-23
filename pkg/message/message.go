@@ -23,7 +23,7 @@ type MessageList struct {
 	Next string    `json:"next,omitempty"`
 }
 
-func (m *Message) Decode(elements []MessageELement) error {
+func (m *Message) Decode(elements []MessageElement) error {
 	raw := ""
 	for _, e := range elements {
 		raw += e.Stringify()
@@ -32,7 +32,7 @@ func (m *Message) Decode(elements []MessageELement) error {
 	return nil
 }
 
-func (m *Message) Encode() ([]MessageELement, error) {
+func (m *Message) Encode() ([]MessageElement, error) {
 	if m.Content == "" {
 		return nil, nil
 	}
