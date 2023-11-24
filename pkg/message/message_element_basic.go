@@ -1,6 +1,10 @@
 package message
 
-import "golang.org/x/net/html"
+import (
+	"strings"
+
+	"golang.org/x/net/html"
+)
 
 type MessageElementText struct {
 	*noAliasMessageElement
@@ -13,6 +17,18 @@ func (e *MessageElementText) Tag() string {
 
 func (e *MessageElementText) Stringify() string {
 	return e.Content
+}
+
+func (e *MessageElementText) parse(n *html.Node) (MessageElement, error) {
+	if n.Type == html.TextNode {
+		content := strings.TrimSpace(n.Data)
+		if content != "" {
+			return &MessageElementText{
+				Content: content,
+			}, nil
+		}
+	}
+	return nil, nil
 }
 
 type MessageElementAt struct {
@@ -44,6 +60,16 @@ func (e *MessageElementAt) Stringify() string {
 	return result + " />"
 }
 
+func (e *MessageElementAt) parse(n *html.Node) (MessageElement, error) {
+	attrMap := attrList2MapVal(n.Attr)
+	return &MessageElementAt{
+		Id:   attrMap["id"],
+		Name: attrMap["name"],
+		Role: attrMap["role"],
+		Type: attrMap["type"],
+	}, nil
+}
+
 type MessageElementSharp struct {
 	*noAliasMessageElement
 	Id   string //收发	目标频道的 ID
@@ -65,6 +91,14 @@ func (e *MessageElementSharp) Stringify() string {
 	return result + " />"
 }
 
+func (e *MessageElementSharp) parse(n *html.Node) (MessageElement, error) {
+	attrMap := attrList2MapVal(n.Attr)
+	return &MessageElementSharp{
+		Id:   attrMap["id"],
+		Name: attrMap["name"],
+	}, nil
+}
+
 type MessageElementA struct {
 	*noAliasMessageElement
 	Href string
@@ -81,28 +115,16 @@ func (e *MessageElementA) Stringify() string {
 	}
 	return result + " />"
 }
+func (e *MessageElementA) parse(n *html.Node) (MessageElement, error) {
+	attrMap := attrList2MapVal(n.Attr)
+	return &MessageElementA{
+		Href: attrMap["href"],
+	}, nil
+}
 
 func init() {
-	regsiterParser("at", func(n *html.Node) (MessageElement, error) {
-		attrMap := attrList2Map(n.Attr)
-		return &MessageElementAt{
-			Id:   attrMap["id"].Val,
-			Name: attrMap["name"].Val,
-			Role: attrMap["role"].Val,
-			Type: attrMap["type"].Val,
-		}, nil
-	})
-	regsiterParser("sharp", func(n *html.Node) (MessageElement, error) {
-		attrMap := attrList2Map(n.Attr)
-		return &MessageElementSharp{
-			Id:   attrMap["id"].Val,
-			Name: attrMap["name"].Val,
-		}, nil
-	})
-	regsiterParser("a", func(n *html.Node) (MessageElement, error) {
-		attrMap := attrList2Map(n.Attr)
-		return &MessageElementA{
-			Href: attrMap["href"].Val,
-		}, nil
-	})
+	regsiterParserElement(&MessageElementText{})
+	regsiterParserElement(&MessageElementAt{})
+	regsiterParserElement(&MessageElementSharp{})
+	regsiterParserElement(&MessageElementA{})
 }

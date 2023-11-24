@@ -2,40 +2,61 @@ package message
 
 import (
 	"bytes"
+	"fmt"
 	"strings"
 
 	"golang.org/x/net/html"
 )
 
-type messageElemenParser func(n *html.Node) (MessageElement, error)
+type messageElementParserFunc func(n *html.Node) (MessageElement, error)
 
-var _parserOfTag = make(map[string]messageElemenParser)
+type messageElementParser interface {
+	Tag() string
+	Alias() []string
+	parse(n *html.Node) (MessageElement, error)
+}
 
-func attrList2Map(attrs []html.Attribute) map[string]html.Attribute {
-	var result = make(map[string]html.Attribute)
+type parsersStruct struct {
+	_storage map[string]messageElementParserFunc
+}
+
+func (parsers *parsersStruct) set(tag string, parseFunc messageElementParserFunc) {
+	parsers._storage[tag] = parseFunc
+}
+
+func (parsers *parsersStruct) get(tag string) (messageElementParserFunc, bool) {
+	val, ok := parsers._storage[tag]
+	return val, ok
+}
+
+func attrList2MapVal(attrs []html.Attribute) map[string]string {
+	var result = make(map[string]string)
 	for _, attr := range attrs {
-		result[attr.Key] = attr
+		result[attr.Key] = attr.Val
 	}
 	return result
 }
 
-func regsiterParser(tag string, parserFunc messageElemenParser) {
-	_parserOfTag[tag] = parserFunc
-}
-func regsiterParserMulti(tags []string, parserFunc messageElemenParser) {
-	for _, tag := range tags {
-		_parserOfTag[tag] = parserFunc
-	}
+var factory = &parsersStruct{
+	_storage: make(map[string]messageElementParserFunc),
 }
 
-func init() {
+func regsiterParserElement(parser messageElementParser) {
+	fmt.Printf("set parser tag:[%s],with alias: %v\n", parser.Tag(), parser.Alias())
+	factory.set(parser.Tag(), parser.parse)
+	if len(parser.Alias()) > 0 {
+		for _, tag := range parser.Alias() {
+			factory.set(tag, parser.parse)
+		}
+	}
+
 }
 
 func parseHtmlNode(n *html.Node, callback func(e MessageElement)) error {
 	parsed := false
 	if n.Type == html.ElementNode {
-		var parserOfTagFunc messageElemenParser
-		parserOfTagFunc, parsed = _parserOfTag[n.Data]
+		var parserOfTagFunc messageElementParserFunc
+		parserOfTagFunc, parsed = factory.get(n.Data)
 		if parsed {
 			e, err := parserOfTagFunc(n)
 			if err != nil {

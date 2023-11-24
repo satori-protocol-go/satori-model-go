@@ -7,20 +7,27 @@ import (
 	"golang.org/x/net/html"
 )
 
-type MessageElementImg struct {
-	*noAliasMessageElement
+type resourceRootMessageElement struct {
 	Src     string
 	Cache   bool
 	Timeout string //ms
-	Width   uint32
-	Height  uint32
 }
 
-func (e *MessageElementImg) Tag() string {
-	return "img"
+func parseResourceRootMessageElement(attrMap map[string]string) *resourceRootMessageElement {
+	result := &resourceRootMessageElement{
+		Src:     attrMap["src"],
+		Cache:   false,
+		Timeout: attrMap["timeout"],
+	}
+	cacheAttr, ok := attrMap["cache"]
+	if ok && cacheAttr != "" {
+		result.Cache = cacheAttr == "true" || cacheAttr == "1"
+	}
+	return result
 }
-func (e *MessageElementImg) Stringify() string {
-	result := "<" + e.Tag()
+
+func (e *resourceRootMessageElement) attrString() string {
+	result := ""
 	if e.Src != "" {
 		result += ` src="` + e.Src + `"`
 	}
@@ -30,20 +37,62 @@ func (e *MessageElementImg) Stringify() string {
 	if e.Timeout != "" {
 		result += ` timeout="` + e.Timeout + `"`
 	}
+	return result
+}
+
+func (e *resourceRootMessageElement) stringifyByTag(tag string) string {
+	return "<" + tag + e.attrString() + "/>"
+}
+
+type MessageElementImg struct {
+	*noAliasMessageElement
+	*resourceRootMessageElement
+	Width  uint32
+	Height uint32
+}
+
+func (e *MessageElementImg) Tag() string {
+	return "img"
+}
+
+func (e *MessageElementImg) Stringify() string {
+	result := "<" + e.Tag()
+	attrStr := e.attrString()
 	if e.Width > 0 {
-		result += fmt.Sprintf(" width=%d", e.Width)
+		attrStr += fmt.Sprintf(" width=%d", e.Width)
 	}
 	if e.Height > 0 {
-		result += fmt.Sprintf(" height=%d", e.Height)
+		attrStr += fmt.Sprintf(" height=%d", e.Height)
 	}
 	return result + " />"
 }
 
+func (e *MessageElementImg) parse(n *html.Node) (MessageElement, error) {
+	attrMap := attrList2MapVal(n.Attr)
+	root := parseResourceRootMessageElement(attrMap)
+	result := &MessageElementImg{
+		resourceRootMessageElement: root,
+	}
+	if w, ok := attrMap["width"]; ok {
+		width, e := strconv.Atoi(w)
+		if e != nil {
+			return nil, fmt.Errorf("width[%s] is illegal:%v", w, e)
+		}
+		result.Width = uint32(width)
+	}
+	if h, ok := attrMap["height"]; ok {
+		height, e := strconv.Atoi(h)
+		if e != nil {
+			return nil, fmt.Errorf("height[%s] is illegal:%v", h, e)
+		}
+		result.Height = uint32(height)
+	}
+	return result, nil
+}
+
 type MessageElementAudio struct {
 	*noAliasMessageElement
-	Src     string
-	Cache   bool
-	Timeout string //ms
+	*resourceRootMessageElement
 }
 
 func (e *MessageElementAudio) Tag() string {
@@ -51,24 +100,19 @@ func (e *MessageElementAudio) Tag() string {
 }
 
 func (e *MessageElementAudio) Stringify() string {
-	result := "<" + e.Tag()
-	if e.Src != "" {
-		result += ` src="` + e.Src + `"`
-	}
-	if e.Cache {
-		result += ` cache`
-	}
-	if e.Timeout != "" {
-		result += ` timeout="` + e.Timeout + `"`
-	}
-	return result + " />"
+	return e.stringifyByTag(e.Tag())
+}
+
+func (e *MessageElementAudio) parse(n *html.Node) (MessageElement, error) {
+	attrMap := attrList2MapVal(n.Attr)
+	return &MessageElementAudio{
+		resourceRootMessageElement: parseResourceRootMessageElement(attrMap),
+	}, nil
 }
 
 type MessageElementVedio struct {
 	*noAliasMessageElement
-	Src     string
-	Cache   bool
-	Timeout string //ms
+	*resourceRootMessageElement
 }
 
 func (e *MessageElementVedio) Tag() string {
@@ -76,24 +120,19 @@ func (e *MessageElementVedio) Tag() string {
 }
 
 func (e *MessageElementVedio) Stringify() string {
-	result := "<" + e.Tag()
-	if e.Src != "" {
-		result += ` src="` + e.Src + `"`
-	}
-	if e.Cache {
-		result += ` cache`
-	}
-	if e.Timeout != "" {
-		result += ` timeout="` + e.Timeout + `"`
-	}
-	return result + " />"
+	return e.stringifyByTag(e.Tag())
+}
+
+func (e *MessageElementVedio) parse(n *html.Node) (MessageElement, error) {
+	attrMap := attrList2MapVal(n.Attr)
+	return &MessageElementVedio{
+		resourceRootMessageElement: parseResourceRootMessageElement(attrMap),
+	}, nil
 }
 
 type MessageElementFile struct {
 	*noAliasMessageElement
-	Src     string
-	Cache   bool
-	Timeout string //ms
+	*resourceRootMessageElement
 }
 
 func (e *MessageElementFile) Tag() string {
@@ -101,84 +140,19 @@ func (e *MessageElementFile) Tag() string {
 }
 
 func (e *MessageElementFile) Stringify() string {
-	result := "<" + e.Tag()
-	if e.Src != "" {
-		result += ` src="` + e.Src + `"`
-	}
-	if e.Cache {
-		result += ` cache`
-	}
-	if e.Timeout != "" {
-		result += ` timeout="` + e.Timeout + `"`
-	}
-	return result + " />"
+	return e.stringifyByTag(e.Tag())
+}
+
+func (e *MessageElementFile) parse(n *html.Node) (MessageElement, error) {
+	attrMap := attrList2MapVal(n.Attr)
+	return &MessageElementFile{
+		resourceRootMessageElement: parseResourceRootMessageElement(attrMap),
+	}, nil
 }
 
 func init() {
-	regsiterParser("img", func(n *html.Node) (MessageElement, error) {
-		attrMap := attrList2Map(n.Attr)
-		result := &MessageElementImg{
-			Src:     attrMap["src"].Val,
-			Cache:   false,
-			Timeout: attrMap["timeout"].Val,
-		}
-		cacheAttr, ok := attrMap["cache"]
-		if ok && cacheAttr.Val != "" {
-			result.Cache = cacheAttr.Val == "true" || cacheAttr.Val == "1"
-		}
-		if w, ok := attrMap["width"]; ok {
-			width, e := strconv.Atoi(w.Val)
-			if e != nil {
-				return nil, fmt.Errorf("width[%s] is illegal:%v", w.Val, e)
-			}
-			result.Width = uint32(width)
-		}
-		if h, ok := attrMap["height"]; ok {
-			height, e := strconv.Atoi(h.Val)
-			if e != nil {
-				return nil, fmt.Errorf("height[%s] is illegal:%v", h.Val, e)
-			}
-			result.Height = uint32(height)
-		}
-		return result, nil
-	})
-	regsiterParser("audio", func(n *html.Node) (MessageElement, error) {
-		attrMap := attrList2Map(n.Attr)
-		result := &MessageElementAudio{
-			Src:     attrMap["src"].Val,
-			Cache:   false,
-			Timeout: attrMap["timeout"].Val,
-		}
-		cacheAttr, ok := attrMap["cache"]
-		if ok && cacheAttr.Val != "" {
-			result.Cache = cacheAttr.Val == "true" || cacheAttr.Val == "1"
-		}
-		return result, nil
-	})
-	regsiterParser("video", func(n *html.Node) (MessageElement, error) {
-		attrMap := attrList2Map(n.Attr)
-		result := &MessageElementVedio{
-			Src:     attrMap["src"].Val,
-			Cache:   false,
-			Timeout: attrMap["timeout"].Val,
-		}
-		cacheAttr, ok := attrMap["cache"]
-		if ok && cacheAttr.Val != "" {
-			result.Cache = cacheAttr.Val == "true" || cacheAttr.Val == "1"
-		}
-		return result, nil
-	})
-	regsiterParser("file", func(n *html.Node) (MessageElement, error) {
-		attrMap := attrList2Map(n.Attr)
-		result := &MessageElementFile{
-			Src:     attrMap["src"].Val,
-			Cache:   false,
-			Timeout: attrMap["timeout"].Val,
-		}
-		cacheAttr, ok := attrMap["cache"]
-		if ok && cacheAttr.Val != "" {
-			result.Cache = cacheAttr.Val == "true" || cacheAttr.Val == "1"
-		}
-		return result, nil
-	})
+	regsiterParserElement(&MessageElementImg{})
+	regsiterParserElement(&MessageElementAudio{})
+	regsiterParserElement(&MessageElementVedio{})
+	regsiterParserElement(&MessageElementFile{})
 }

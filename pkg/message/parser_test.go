@@ -17,7 +17,7 @@ func TestParse(t *testing.T) {
 
 func TestStringify(t *testing.T) {
 	elements, _ := Parse(
-		`我是纯文本<b>我是加粗文本<b>套娃<b>套娃中的套娃</b></b>我是123</b>`)
+		`我是纯文本<strong>我是加粗文本<b>套娃<b>套娃中的套娃</b></b>我是123</strong>`)
 	s := ""
 	for _, e := range elements {
 		s += e.Stringify()

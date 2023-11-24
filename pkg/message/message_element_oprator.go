@@ -1,5 +1,7 @@
 package message
 
+import "golang.org/x/net/html"
+
 type MessageElementButton struct {
 	*noAliasMessageElement
 	//	id	string?	发	按钮的 ID
@@ -37,4 +39,19 @@ func (e *MessageElementButton) Stringify() string {
 		result += ` theme="` + e.Theme + `"`
 	}
 	return result + " />"
+}
+
+func (e *MessageElementButton) parse(n *html.Node) (MessageElement, error) {
+	attrMap := attrList2MapVal(n.Attr)
+	return &MessageElementButton{
+		Id:    attrMap["id"],
+		Type:  attrMap["type"],
+		Href:  attrMap["href"],
+		Text:  attrMap["text"],
+		Theme: attrMap["theme"],
+	}, nil
+}
+
+func init() {
+	regsiterParserElement(&MessageElementButton{})
 }
