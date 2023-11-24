@@ -8,4 +8,4 @@
 
 [![](https://img.shields.io/github/commit-activity/m/dezhishen/satori-model-go?logo=github)](https://github.com/dezhishen/satori-model-go/graphs/commit-activity)
 [![](https://img.shields.io/github/last-commit/dezhishen/satori-model-go.svg?logo=github)](https://github.com/dezhishen/satori-model-go/commits)
-[![wakatime](https://wakatime.com/badge/user/a2c981ca-317d-4b34-8ed9-4264fbfdb775/project/018b2817-27cb-454d-b957-5a4686855dcd.svg)](https://wakatime.com/badge/user/a2c981ca-317d-4b34-8ed9-4264fbfdb775/project/018b2817-27cb-454d-b957-5a4686855dcd)
+[![wakatime](https://wakatime.com/badge/user/a2c981ca-317d-4b34-8ed9-4264fbfdb775/project/018b7a7a-5cec-4dbc-b123-dce7cfc7737c.svg)](https://wakatime.com/badge/user/a2c981ca-317d-4b34-8ed9-4264fbfdb775/project/018b7a7a-5cec-4dbc-b123-dce7cfc7737c)
