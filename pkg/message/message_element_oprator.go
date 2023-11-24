@@ -18,7 +18,7 @@ type MessageElementButton struct {
 }
 
 func (e *MessageElementButton) Tag() string {
-	return "quote"
+	return "button"
 }
 
 func (e *MessageElementButton) Stringify() string {
