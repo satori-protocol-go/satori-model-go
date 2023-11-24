@@ -20,8 +20,8 @@ func parseResourceRootMessageElement(attrMap map[string]string) *resourceRootMes
 		Timeout: attrMap["timeout"],
 	}
 	cacheAttr, ok := attrMap["cache"]
-	if ok && cacheAttr != "" {
-		result.Cache = cacheAttr == "true" || cacheAttr == "1"
+	if ok {
+		result.Cache = cacheAttr == "" || cacheAttr == "true" || cacheAttr == "1"
 	}
 	return result
 }
