@@ -1,5 +1,5 @@
 # satori-model-go
-[satori](https://satori.js.org/zh-CN/)协议的模型
+[satori](https://satori.chat/zh-CN)协议的模型
 
 [![](https://img.shields.io/github/license/dezhishen/satori-model-go.svg?logo=github)](./LICENSE)
 [![](https://img.shields.io/github/stars/dezhishen/satori-model-go.svg?logo=github)](https://github.com/dezhishen/satori-model-go/stargazers)
