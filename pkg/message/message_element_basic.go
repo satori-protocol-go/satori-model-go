@@ -19,7 +19,7 @@ func (e *MessageElementText) Stringify() string {
 	return e.Content
 }
 
-func (e *MessageElementText) parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElementText) Parse(n *html.Node) (MessageElement, error) {
 	if n.Type == html.TextNode {
 		content := strings.TrimSpace(n.Data)
 		if content != "" {
@@ -60,7 +60,7 @@ func (e *MessageElementAt) Stringify() string {
 	return result + " />"
 }
 
-func (e *MessageElementAt) parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElementAt) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
 	return &MessageElementAt{
 		Id:   attrMap["id"],
@@ -91,7 +91,7 @@ func (e *MessageElementSharp) Stringify() string {
 	return result + " />"
 }
 
-func (e *MessageElementSharp) parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElementSharp) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
 	return &MessageElementSharp{
 		Id:   attrMap["id"],
@@ -115,7 +115,7 @@ func (e *MessageElementA) Stringify() string {
 	}
 	return result + " />"
 }
-func (e *MessageElementA) parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElementA) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
 	return &MessageElementA{
 		Href: attrMap["href"],
@@ -123,8 +123,8 @@ func (e *MessageElementA) parse(n *html.Node) (MessageElement, error) {
 }
 
 func init() {
-	regsiterParserElement(&MessageElementText{})
-	regsiterParserElement(&MessageElementAt{})
-	regsiterParserElement(&MessageElementSharp{})
-	regsiterParserElement(&MessageElementA{})
+	RegsiterParserElement(&MessageElementText{})
+	RegsiterParserElement(&MessageElementAt{})
+	RegsiterParserElement(&MessageElementSharp{})
+	RegsiterParserElement(&MessageElementA{})
 }

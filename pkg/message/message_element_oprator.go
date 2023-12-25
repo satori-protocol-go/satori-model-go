@@ -41,7 +41,7 @@ func (e *MessageElementButton) Stringify() string {
 	return result + " />"
 }
 
-func (e *MessageElementButton) parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElementButton) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
 	return &MessageElementButton{
 		Id:    attrMap["id"],
@@ -53,5 +53,5 @@ func (e *MessageElementButton) parse(n *html.Node) (MessageElement, error) {
 }
 
 func init() {
-	regsiterParserElement(&MessageElementButton{})
+	RegsiterParserElement(&MessageElementButton{})
 }

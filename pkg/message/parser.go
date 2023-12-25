@@ -10,10 +10,10 @@ import (
 
 type messageElementParserFunc func(n *html.Node) (MessageElement, error)
 
-type messageElementParser interface {
+type MessageElementParser interface {
 	Tag() string
 	Alias() []string
-	parse(n *html.Node) (MessageElement, error)
+	Parse(n *html.Node) (MessageElement, error)
 }
 
 type parsersStruct struct {
@@ -41,12 +41,12 @@ var factory = &parsersStruct{
 	_storage: make(map[string]messageElementParserFunc),
 }
 
-func regsiterParserElement(parser messageElementParser) {
+func RegsiterParserElement(parser MessageElementParser) {
 	fmt.Printf("set parser tag:[%s],with alias: %v\n", parser.Tag(), parser.Alias())
-	factory.set(parser.Tag(), parser.parse)
+	factory.set(parser.Tag(), parser.Parse)
 	if len(parser.Alias()) > 0 {
 		for _, tag := range parser.Alias() {
-			factory.set(tag, parser.parse)
+			factory.set(tag, parser.Parse)
 		}
 	}
 

@@ -18,7 +18,7 @@ func (e *MessageElmentBr) Stringify() string {
 	return fmt.Sprintln()
 }
 
-func (e *MessageElmentBr) parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElmentBr) Parse(n *html.Node) (MessageElement, error) {
 	return &MessageElmentBr{}, nil
 }
 
@@ -35,7 +35,7 @@ func (e *MessageElmentP) Stringify() string {
 	return e.stringifyByTag(e.Tag())
 }
 
-func (e *MessageElmentP) parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElmentP) Parse(n *html.Node) (MessageElement, error) {
 	var children []MessageElement
 	err := parseHtmlChildrenNode(n, func(e MessageElement) {
 		children = append(children, e)
@@ -63,7 +63,7 @@ func (e *MessageElementMessage) Stringify() string {
 	return e.stringifyByTag(e.Tag())
 }
 
-func (e *MessageElementMessage) parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElementMessage) Parse(n *html.Node) (MessageElement, error) {
 	var children []MessageElement
 	err := parseHtmlChildrenNode(n, func(e MessageElement) {
 		children = append(children, e)
@@ -79,7 +79,7 @@ func (e *MessageElementMessage) parse(n *html.Node) (MessageElement, error) {
 }
 
 func init() {
-	regsiterParserElement(&MessageElmentBr{})
-	regsiterParserElement(&MessageElmentP{})
-	regsiterParserElement(&MessageElementMessage{})
+	RegsiterParserElement(&MessageElmentBr{})
+	RegsiterParserElement(&MessageElmentP{})
+	RegsiterParserElement(&MessageElementMessage{})
 }

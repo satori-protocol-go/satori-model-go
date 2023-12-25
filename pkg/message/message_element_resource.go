@@ -67,7 +67,7 @@ func (e *MessageElementImg) Stringify() string {
 	return result + " />"
 }
 
-func (e *MessageElementImg) parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElementImg) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
 	root := parseResourceRootMessageElement(attrMap)
 	result := &MessageElementImg{
@@ -103,7 +103,7 @@ func (e *MessageElementAudio) Stringify() string {
 	return e.stringifyByTag(e.Tag())
 }
 
-func (e *MessageElementAudio) parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElementAudio) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
 	return &MessageElementAudio{
 		resourceRootMessageElement: parseResourceRootMessageElement(attrMap),
@@ -123,7 +123,7 @@ func (e *MessageElementVedio) Stringify() string {
 	return e.stringifyByTag(e.Tag())
 }
 
-func (e *MessageElementVedio) parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElementVedio) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
 	return &MessageElementVedio{
 		resourceRootMessageElement: parseResourceRootMessageElement(attrMap),
@@ -143,7 +143,7 @@ func (e *MessageElementFile) Stringify() string {
 	return e.stringifyByTag(e.Tag())
 }
 
-func (e *MessageElementFile) parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElementFile) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
 	return &MessageElementFile{
 		resourceRootMessageElement: parseResourceRootMessageElement(attrMap),
@@ -151,8 +151,8 @@ func (e *MessageElementFile) parse(n *html.Node) (MessageElement, error) {
 }
 
 func init() {
-	regsiterParserElement(&MessageElementImg{})
-	regsiterParserElement(&MessageElementAudio{})
-	regsiterParserElement(&MessageElementVedio{})
-	regsiterParserElement(&MessageElementFile{})
+	RegsiterParserElement(&MessageElementImg{})
+	RegsiterParserElement(&MessageElementAudio{})
+	RegsiterParserElement(&MessageElementVedio{})
+	RegsiterParserElement(&MessageElementFile{})
 }

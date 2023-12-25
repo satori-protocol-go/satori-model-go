@@ -15,7 +15,7 @@ func (e *MessageElementQuote) Stringify() string {
 	return e.stringifyByTag(e.Tag())
 }
 
-func (e *MessageElementQuote) parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElementQuote) Parse(n *html.Node) (MessageElement, error) {
 	var children []MessageElement
 	err := parseHtmlChildrenNode(n, func(e MessageElement) {
 		children = append(children, e)
@@ -61,7 +61,7 @@ func (e *MessageElementAuthor) Stringify() string {
 	return result + "</" + e.Tag() + ">"
 }
 
-func (e *MessageElementAuthor) parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElementAuthor) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
 	result := &MessageElementAuthor{
 		Id:     attrMap["id"],
@@ -77,6 +77,6 @@ func (e *MessageElementAuthor) parse(n *html.Node) (MessageElement, error) {
 	return result, nil
 }
 func init() {
-	regsiterParserElement(&MessageElementQuote{})
-	regsiterParserElement(&MessageElementAuthor{})
+	RegsiterParserElement(&MessageElementQuote{})
+	RegsiterParserElement(&MessageElementAuthor{})
 }
