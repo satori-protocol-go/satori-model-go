@@ -22,7 +22,7 @@ func (e *MessageElmentBr) Parse(n *html.Node) (MessageElement, error) {
 
 type MessageElmentP struct {
 	*noAliasMessageElement
-	*childrenMessageElement
+	*ChildrenMessageElement
 }
 
 func (e *MessageElmentP) Tag() string {
@@ -42,15 +42,17 @@ func (e *MessageElmentP) Parse(n *html.Node) (MessageElement, error) {
 		return nil, err
 	}
 	return &MessageElmentP{
-		childrenMessageElement: &childrenMessageElement{
+		ChildrenMessageElement: &ChildrenMessageElement{
 			Children: children,
 		},
 	}, nil
 }
 
 type MessageElementMessage struct {
+	Id      string
+	Forward bool
 	*noAliasMessageElement
-	*childrenMessageElement
+	*ChildrenMessageElement
 }
 
 func (e *MessageElementMessage) Tag() string {
@@ -58,7 +60,18 @@ func (e *MessageElementMessage) Tag() string {
 }
 
 func (e *MessageElementMessage) Stringify() string {
-	return e.stringifyByTag(e.Tag())
+	result := ""
+	if e.Id != "" {
+		result += ` id="` + e.Id + `"`
+	}
+	if e.Forward {
+		result += ` forward`
+	}
+	childrenStr := e.stringifyChildren()
+	if childrenStr == "" {
+		return `<` + e.Tag() + result + ` />`
+	}
+	return `<` + e.Tag() + result + `>` + childrenStr + `</` + e.Tag() + `>`
 }
 
 func (e *MessageElementMessage) Parse(n *html.Node) (MessageElement, error) {
@@ -69,11 +82,20 @@ func (e *MessageElementMessage) Parse(n *html.Node) (MessageElement, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &MessageElementMessage{
-		childrenMessageElement: &childrenMessageElement{
+	attrMap := attrList2MapVal(n.Attr)
+	result := &MessageElementMessage{
+		Forward: false,
+		ChildrenMessageElement: &ChildrenMessageElement{
 			Children: children,
 		},
-	}, nil
+	}
+	if id, ok := attrMap["id"]; ok {
+		result.Id = id
+	}
+	if forwardAttr, ok := attrMap["forward"]; ok {
+		result.Forward = forwardAttr == "" || forwardAttr == "true" || forwardAttr == "1"
+	}
+	return result, nil
 }
 
 func init() {

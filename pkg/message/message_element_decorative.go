@@ -5,7 +5,7 @@ import (
 )
 
 type MessageElementStrong struct {
-	*childrenMessageElement
+	*ChildrenMessageElement
 }
 
 func (e *MessageElementStrong) Tag() string {
@@ -28,14 +28,14 @@ func (e *MessageElementStrong) Parse(n *html.Node) (MessageElement, error) {
 		return nil, err
 	}
 	return &MessageElementStrong{
-		&childrenMessageElement{
+		&ChildrenMessageElement{
 			Children: children,
 		},
 	}, nil
 }
 
 type MessageElementEm struct {
-	*childrenMessageElement
+	*ChildrenMessageElement
 }
 
 func (e *MessageElementEm) Tag() string {
@@ -58,18 +58,18 @@ func (e *MessageElementEm) Parse(n *html.Node) (MessageElement, error) {
 		return nil, err
 	}
 	return &MessageElementEm{
-		&childrenMessageElement{
+		&ChildrenMessageElement{
 			Children: children,
 		},
 	}, nil
 }
 
 type MessageElementIns struct {
-	*childrenMessageElement
+	*ChildrenMessageElement
 }
 
 func (e *MessageElementIns) Tag() string {
-	return "s"
+	return "u"
 }
 
 func (e *MessageElementIns) Alias() []string {
@@ -89,14 +89,14 @@ func (e *MessageElementIns) Parse(n *html.Node) (MessageElement, error) {
 		return nil, err
 	}
 	return &MessageElementIns{
-		&childrenMessageElement{
+		&ChildrenMessageElement{
 			Children: children,
 		},
 	}, nil
 }
 
 type MessageElementDel struct {
-	*childrenMessageElement
+	*ChildrenMessageElement
 }
 
 func (e *MessageElementDel) Tag() string {
@@ -120,7 +120,7 @@ func (e *MessageElementDel) Parse(n *html.Node) (MessageElement, error) {
 		return nil, err
 	}
 	return &MessageElementDel{
-		childrenMessageElement: &childrenMessageElement{
+		ChildrenMessageElement: &ChildrenMessageElement{
 			Children: children,
 		},
 	}, nil
@@ -128,7 +128,7 @@ func (e *MessageElementDel) Parse(n *html.Node) (MessageElement, error) {
 
 type MessageElementSpl struct {
 	*noAliasMessageElement
-	*childrenMessageElement
+	*ChildrenMessageElement
 }
 
 func (e *MessageElementSpl) Tag() string {
@@ -148,14 +148,14 @@ func (e *MessageElementSpl) Parse(n *html.Node) (MessageElement, error) {
 		return nil, err
 	}
 	return &MessageElementSpl{
-		childrenMessageElement: &childrenMessageElement{
+		ChildrenMessageElement: &ChildrenMessageElement{
 			Children: children,
 		},
 	}, nil
 }
 
 type MessageElementCode struct {
-	*childrenMessageElement
+	*ChildrenMessageElement
 	*noAliasMessageElement
 }
 
@@ -176,14 +176,14 @@ func (e *MessageElementCode) Parse(n *html.Node) (MessageElement, error) {
 		return nil, err
 	}
 	return &MessageElementCode{
-		childrenMessageElement: &childrenMessageElement{
+		ChildrenMessageElement: &ChildrenMessageElement{
 			Children: children,
 		},
 	}, nil
 }
 
 type MessageElementSup struct {
-	*childrenMessageElement
+	*ChildrenMessageElement
 	*noAliasMessageElement
 }
 
@@ -204,14 +204,14 @@ func (e *MessageElementSup) Parse(n *html.Node) (MessageElement, error) {
 		return nil, err
 	}
 	return &MessageElementSup{
-		childrenMessageElement: &childrenMessageElement{
+		ChildrenMessageElement: &ChildrenMessageElement{
 			Children: children,
 		},
 	}, nil
 }
 
 type MessageElementSub struct {
-	*childrenMessageElement
+	*ChildrenMessageElement
 	*noAliasMessageElement
 }
 
@@ -232,7 +232,7 @@ func (e *MessageElementSub) Parse(n *html.Node) (MessageElement, error) {
 		return nil, err
 	}
 	return &MessageElementSub{
-		childrenMessageElement: &childrenMessageElement{
+		ChildrenMessageElement: &ChildrenMessageElement{
 			Children: children,
 		},
 	}, nil

@@ -4,7 +4,7 @@ import "golang.org/x/net/html"
 
 type MessageElementQuote struct {
 	*noAliasMessageElement
-	*childrenMessageElement
+	*ChildrenMessageElement
 }
 
 func (e *MessageElementQuote) Tag() string {
@@ -24,7 +24,7 @@ func (e *MessageElementQuote) Parse(n *html.Node) (MessageElement, error) {
 		return nil, err
 	}
 	return &MessageElementQuote{
-		childrenMessageElement: &childrenMessageElement{
+		ChildrenMessageElement: &ChildrenMessageElement{
 			Children: children,
 		},
 	}, nil
@@ -32,7 +32,7 @@ func (e *MessageElementQuote) Parse(n *html.Node) (MessageElement, error) {
 
 type MessageElementAuthor struct {
 	*noAliasMessageElement
-	*childrenMessageElement
+	*ChildrenMessageElement
 	Id     string
 	Name   string
 	Avatar string
@@ -53,12 +53,12 @@ func (e *MessageElementAuthor) Stringify() string {
 	if e.Avatar != "" {
 		result += ` avatar="` + e.Avatar + `"`
 	}
-	result += ">"
+	// result += ">"
 	childrenStr := e.stringifyChildren()
-	if childrenStr != "" {
-		result += childrenStr
+	if childrenStr == "" {
+		return result + ` />`
 	}
-	return result + "</" + e.Tag() + ">"
+	return result + ` >` + childrenStr + `</` + e.Tag() + `>`
 }
 
 func (e *MessageElementAuthor) Parse(n *html.Node) (MessageElement, error) {
