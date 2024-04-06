@@ -1,8 +1,6 @@
 package message
 
 import (
-	"fmt"
-
 	"golang.org/x/net/html"
 )
 
@@ -15,7 +13,7 @@ func (e *MessageElmentBr) Tag() string {
 }
 
 func (e *MessageElmentBr) Stringify() string {
-	return fmt.Sprintln()
+	return "<br/>"
 }
 
 func (e *MessageElmentBr) Parse(n *html.Node) (MessageElement, error) {

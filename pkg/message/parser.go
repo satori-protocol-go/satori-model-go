@@ -102,6 +102,14 @@ func Parse(source string) ([]MessageElement, error) {
 	return result, nil
 }
 
-func Stringify([]MessageElement) (string, error) {
-	return "", nil
+func Stringify(elements []MessageElement) (string, error) {
+	if len(elements) == 0 {
+		return "", nil
+	}
+	result := ""
+	for _, e := range elements {
+		result += e.Stringify()
+	}
+	return result, nil
+
 }
