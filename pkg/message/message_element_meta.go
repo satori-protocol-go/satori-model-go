@@ -5,6 +5,7 @@ import "golang.org/x/net/html"
 type MessageElementQuote struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement
+	*ExtendAttributes
 }
 
 func (e *MessageElementQuote) Tag() string {
@@ -12,27 +13,32 @@ func (e *MessageElementQuote) Tag() string {
 }
 
 func (e *MessageElementQuote) Stringify() string {
-	return e.stringifyByTag(e.Tag())
+	result := e.stringifyAttributes()
+	childrenStr := e.stringifyChildren()
+	if childrenStr == "" {
+		return `<` + e.Tag() + result + `/>`
+	}
+	return `<` + e.Tag() + result + `>` + childrenStr + `</` + e.Tag() + `>`
 }
 
 func (e *MessageElementQuote) Parse(n *html.Node) (MessageElement, error) {
-	var children []MessageElement
-	err := parseHtmlChildrenNode(n, func(e MessageElement) {
-		children = append(children, e)
-	})
+	attrMap := attrList2MapVal(n.Attr)
+	result := &MessageElementQuote{}
+	for key, value := range attrMap {
+		result.ExtendAttributes = result.AddAttribute(key, value)
+	}
+	children, err := result.parseChildren(n)
 	if err != nil {
 		return nil, err
 	}
-	return &MessageElementQuote{
-		ChildrenMessageElement: &ChildrenMessageElement{
-			Children: children,
-		},
-	}, nil
+	result.ChildrenMessageElement = children
+	return result, nil
 }
 
 type MessageElementAuthor struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement
+	*ExtendAttributes
 	Id     string
 	Name   string
 	Avatar string
@@ -43,7 +49,7 @@ func (e *MessageElementAuthor) Tag() string {
 }
 
 func (e *MessageElementAuthor) Stringify() string {
-	result := "<" + e.Tag()
+	result := ""
 	if e.Id != "" {
 		result += ` id="` + escape(e.Id, true) + `"`
 	}
@@ -53,12 +59,12 @@ func (e *MessageElementAuthor) Stringify() string {
 	if e.Avatar != "" {
 		result += ` avatar="` + escape(e.Avatar, true) + `"`
 	}
-	// result += ">"
+	result += e.stringifyAttributes()
 	childrenStr := e.stringifyChildren()
 	if childrenStr == "" {
-		return result + `/>`
+		return `<` + e.Tag() + result + `/>`
 	}
-	return result + `>` + childrenStr + `</` + e.Tag() + `>`
+	return `<` + e.Tag() + result + `>` + childrenStr + `</` + e.Tag() + `>`
 }
 
 func (e *MessageElementAuthor) Parse(n *html.Node) (MessageElement, error) {
@@ -68,12 +74,16 @@ func (e *MessageElementAuthor) Parse(n *html.Node) (MessageElement, error) {
 		Name:   attrMap["name"],
 		Avatar: attrMap["avatar"],
 	}
-	err := parseHtmlChildrenNode(n, func(e MessageElement) {
-		result.Children = append(result.Children, e)
-	})
+	for key, value := range attrMap {
+		if key != "id" && key != "name" && key != "avatar" {
+			result.ExtendAttributes = result.AddAttribute(key, value)
+		}
+	}
+	children, err := result.parseChildren(n)
 	if err != nil {
 		return nil, err
 	}
+	result.ChildrenMessageElement = children
 	return result, nil
 }
 func init() {

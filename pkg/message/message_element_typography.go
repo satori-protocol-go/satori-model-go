@@ -23,6 +23,7 @@ func (e *MessageElmentBr) Parse(n *html.Node) (MessageElement, error) {
 type MessageElmentP struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement
+	*ExtendAttributes
 }
 
 func (e *MessageElmentP) Tag() string {
@@ -30,22 +31,26 @@ func (e *MessageElmentP) Tag() string {
 }
 
 func (e *MessageElmentP) Stringify() string {
-	return e.stringifyByTag(e.Tag())
+	result := e.stringifyAttributes()
+	childrenStr := e.stringifyChildren()
+	if childrenStr == "" {
+		return "<" + e.Tag() + result + "/>"
+	}
+	return "<" + e.Tag() + result + ">" + childrenStr + "</" + e.Tag() + ">"
 }
 
 func (e *MessageElmentP) Parse(n *html.Node) (MessageElement, error) {
-	var children []MessageElement
-	err := parseHtmlChildrenNode(n, func(e MessageElement) {
-		children = append(children, e)
-	})
+	attrMap := attrList2MapVal(n.Attr)
+	result := &MessageElmentP{}
+	for key, value := range attrMap {
+		result.ExtendAttributes = result.AddAttribute(key, value)
+	}
+	children, err := result.parseChildren(n)
 	if err != nil {
 		return nil, err
 	}
-	return &MessageElmentP{
-		ChildrenMessageElement: &ChildrenMessageElement{
-			Children: children,
-		},
-	}, nil
+	result.ChildrenMessageElement = children
+	return result, nil
 }
 
 type MessageElementMessage struct {
@@ -53,6 +58,7 @@ type MessageElementMessage struct {
 	Forward bool
 	*noAliasMessageElement
 	*ChildrenMessageElement
+	*ExtendAttributes
 }
 
 func (e *MessageElementMessage) Tag() string {
@@ -67,27 +73,18 @@ func (e *MessageElementMessage) Stringify() string {
 	if e.Forward {
 		result += ` forward`
 	}
+	result += e.stringifyAttributes()
 	childrenStr := e.stringifyChildren()
 	if childrenStr == "" {
-		return `<` + e.Tag() + result + ` />`
+		return "<" + e.Tag() + result + "/>"
 	}
-	return `<` + e.Tag() + result + `>` + childrenStr + `</` + e.Tag() + `>`
+	return "<" + e.Tag() + result + ">" + childrenStr + "</" + e.Tag() + ">"
 }
 
 func (e *MessageElementMessage) Parse(n *html.Node) (MessageElement, error) {
-	var children []MessageElement
-	err := parseHtmlChildrenNode(n, func(e MessageElement) {
-		children = append(children, e)
-	})
-	if err != nil {
-		return nil, err
-	}
 	attrMap := attrList2MapVal(n.Attr)
 	result := &MessageElementMessage{
 		Forward: false,
-		ChildrenMessageElement: &ChildrenMessageElement{
-			Children: children,
-		},
 	}
 	if id, ok := attrMap["id"]; ok {
 		result.Id = id
@@ -95,6 +92,16 @@ func (e *MessageElementMessage) Parse(n *html.Node) (MessageElement, error) {
 	if forwardAttr, ok := attrMap["forward"]; ok {
 		result.Forward = forwardAttr == "" || forwardAttr == "true" || forwardAttr == "1"
 	}
+	for key, value := range attrMap {
+		if key != "id" && key != "forward" {
+			result.ExtendAttributes = result.AddAttribute(key, value)
+		}
+	}
+	children, err := result.parseChildren(n)
+	if err != nil {
+		return nil, err
+	}
+	result.ChildrenMessageElement = children
 	return result, nil
 }
 

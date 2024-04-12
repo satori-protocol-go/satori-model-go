@@ -94,7 +94,7 @@ func (t *Token) parseAttributes() []html.Attribute {
 		} else {
 			t.Attr = append(t.Attr, html.Attribute{
 				Key: key,
-				Val: "true",
+				Val: "",
 			})
 		}
 	}

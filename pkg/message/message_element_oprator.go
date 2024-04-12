@@ -4,6 +4,8 @@ import "golang.org/x/net/html"
 
 type MessageElementButton struct {
 	*noAliasMessageElement
+	*ChildrenMessageElement
+	*ExtendAttributes
 	//	id	string?	发	按钮的 ID
 	//
 	// type	string?	发	按钮的类型
@@ -22,7 +24,7 @@ func (e *MessageElementButton) Tag() string {
 }
 
 func (e *MessageElementButton) Stringify() string {
-	result := "<" + e.Tag()
+	result := ""
 	if e.Id != "" {
 		result += ` id="` + escape(e.Id, true) + `"`
 	}
@@ -38,18 +40,34 @@ func (e *MessageElementButton) Stringify() string {
 	if e.Theme != "" {
 		result += ` theme="` + escape(e.Theme, true) + `"`
 	}
-	return result + "/>"
+	result += e.stringifyAttributes()
+	childrenStr := e.stringifyChildren()
+	if childrenStr == "" {
+		return `<` + e.Tag() + result + `/>`
+	}
+	return `<` + e.Tag() + result + `>` + childrenStr + `</` + e.Tag() + `>`
 }
 
 func (e *MessageElementButton) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
-	return &MessageElementButton{
+	result := &MessageElementButton{
 		Id:    attrMap["id"],
 		Type:  attrMap["type"],
 		Href:  attrMap["href"],
 		Text:  attrMap["text"],
 		Theme: attrMap["theme"],
-	}, nil
+	}
+	for key, value := range attrMap {
+		if key != "id" && key != "type" && key != "href" && key != "text" && key != "theme" {
+			result.ExtendAttributes = result.AddAttribute(key, value)
+		}
+	}
+	children, err := result.parseChildren(n)
+	if err != nil {
+		return nil, err
+	}
+	result.ChildrenMessageElement = children
+	return result, nil
 }
 
 func init() {

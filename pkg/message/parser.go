@@ -1,7 +1,6 @@
 package message
 
 import (
-	"fmt"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -41,7 +40,6 @@ var factory = &parsersStruct{
 }
 
 func RegsiterParserElement(parser MessageElementParser) {
-	fmt.Printf("set parser tag:[%s],with alias: %v\n", parser.Tag(), parser.Alias())
 	factory.set(parser.Tag(), parser.Parse)
 	if len(parser.Alias()) > 0 {
 		for _, tag := range parser.Alias() {
