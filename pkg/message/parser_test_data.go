@@ -68,5 +68,6 @@ func _getExtendRawMessage() []string {
 		`<video src="https://example.com" test:test/>`,
 		`<img src="https://example.com">test</img>`,
 		`<file src="https://example.com" test2:test2>test</file>`,
+		`<test:test test="test">test</test:test>`,
 	}
 }

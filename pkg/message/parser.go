@@ -60,6 +60,13 @@ func parseHtmlNode(n *html.Node, callback func(e MessageElement)) error {
 				return err
 			}
 			callback(e)
+		} else {
+			e, err := ExtendParser.Parse(n)
+			if err != nil {
+				return err
+			}
+			callback(e)
+			parsed = true
 		}
 	} else if n.Type == html.TextNode {
 		content := strings.TrimSpace(n.Data)
