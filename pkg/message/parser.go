@@ -1,7 +1,6 @@
 package message
 
 import (
-	"bytes"
 	"fmt"
 	"strings"
 
@@ -89,7 +88,7 @@ func parseHtmlChildrenNode(n *html.Node, callback func(e MessageElement)) error 
 }
 
 func Parse(source string) ([]MessageElement, error) {
-	doc, _ := html.Parse(bytes.NewReader([]byte(source)))
+	doc := xhtmlParse(source)
 	var result []MessageElement
 	err := parseHtmlNode(doc, func(e MessageElement) {
 		if e != nil {
