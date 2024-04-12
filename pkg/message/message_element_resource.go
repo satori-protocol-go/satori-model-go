@@ -66,7 +66,7 @@ func (e *MessageElementImg) attrString() string {
 	}
 	result := ""
 	if e.Src != "" {
-		result += ` src="` + e.Src + `"`
+		result += ` src="` + escape(e.Src, true) + `"`
 	}
 	if e.Cache {
 		result += ` cache`
@@ -135,7 +135,7 @@ func (e *MessageElementAudio) attrString() string {
 	}
 	result := ""
 	if e.Src != "" {
-		result += ` src="` + e.Src + `"`
+		result += ` src="` + escape(e.Src, true) + `"`
 	}
 	if e.Cache {
 		result += ` cache`
@@ -183,7 +183,7 @@ func (e *MessageElementVideo) attrString() string {
 	}
 	result := ""
 	if e.Src != "" {
-		result += ` src="` + e.Src + `"`
+		result += ` src="` + escape(e.Src, true) + `"`
 	}
 	if e.Cache {
 		result += ` cache`
@@ -230,7 +230,7 @@ func (e *MessageElementFile) attrString() string {
 	}
 	result := ""
 	if e.Src != "" {
-		result += ` src="` + e.Src + `"`
+		result += ` src="` + escape(e.Src, true) + `"`
 	}
 	if e.Cache {
 		result += ` cache`

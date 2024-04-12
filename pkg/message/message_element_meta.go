@@ -45,20 +45,20 @@ func (e *MessageElementAuthor) Tag() string {
 func (e *MessageElementAuthor) Stringify() string {
 	result := "<" + e.Tag()
 	if e.Id != "" {
-		result += ` id="` + e.Id + `"`
+		result += ` id="` + escape(e.Id, true) + `"`
 	}
 	if e.Name != "" {
-		result += ` name="` + e.Name + `"`
+		result += ` name="` + escape(e.Name, true) + `"`
 	}
 	if e.Avatar != "" {
-		result += ` avatar="` + e.Avatar + `"`
+		result += ` avatar="` + escape(e.Avatar, true) + `"`
 	}
 	// result += ">"
 	childrenStr := e.stringifyChildren()
 	if childrenStr == "" {
-		return result + ` />`
+		return result + `/>`
 	}
-	return result + ` >` + childrenStr + `</` + e.Tag() + `>`
+	return result + `>` + childrenStr + `</` + e.Tag() + `>`
 }
 
 func (e *MessageElementAuthor) Parse(n *html.Node) (MessageElement, error) {

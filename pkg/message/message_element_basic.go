@@ -16,7 +16,7 @@ func (e *MessageElementText) Tag() string {
 }
 
 func (e *MessageElementText) Stringify() string {
-	return e.Content
+	return escape(e.Content, true)
 }
 
 func (e *MessageElementText) Parse(n *html.Node) (MessageElement, error) {
@@ -46,18 +46,18 @@ func (e *MessageElementAt) Tag() string {
 func (e *MessageElementAt) Stringify() string {
 	result := "<" + e.Tag()
 	if e.Id != "" {
-		result += ` id="` + e.Id + `"`
+		result += ` id="` + escape(e.Id, true) + `"`
 	}
 	if e.Name != "" {
-		result += ` name="` + e.Name + `"`
+		result += ` name="` + escape(e.Name, true) + `"`
 	}
 	if e.Role != "" {
-		result += ` role="` + e.Role + `"`
+		result += ` role="` + escape(e.Role, true) + `"`
 	}
 	if e.Type != "" {
-		result += ` type="` + e.Type + `"`
+		result += ` type="` + escape(e.Type, true) + `"`
 	}
-	return result + " />"
+	return result + "/>"
 }
 
 func (e *MessageElementAt) Parse(n *html.Node) (MessageElement, error) {
@@ -83,12 +83,12 @@ func (e *MessageElementSharp) Tag() string {
 func (e *MessageElementSharp) Stringify() string {
 	result := "<" + e.Tag()
 	if e.Id != "" {
-		result += ` id="` + e.Id + `"`
+		result += ` id="` + escape(e.Id, true) + `"`
 	}
 	if e.Name != "" {
-		result += ` name="` + e.Name + `"`
+		result += ` name="` + escape(e.Name, true) + `"`
 	}
-	return result + " />"
+	return result + "/>"
 }
 
 func (e *MessageElementSharp) Parse(n *html.Node) (MessageElement, error) {
@@ -111,9 +111,9 @@ func (e *MessageElementA) Tag() string {
 func (e *MessageElementA) Stringify() string {
 	result := "<" + e.Tag()
 	if e.Href != "" {
-		result += ` href="` + e.Href + `"`
+		result += ` href="` + escape(e.Href, true) + `"`
 	}
-	return result + " />"
+	return result + "/>"
 }
 func (e *MessageElementA) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)

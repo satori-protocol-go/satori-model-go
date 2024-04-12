@@ -62,7 +62,7 @@ func (e *MessageElementMessage) Tag() string {
 func (e *MessageElementMessage) Stringify() string {
 	result := ""
 	if e.Id != "" {
-		result += ` id="` + e.Id + `"`
+		result += ` id="` + escape(e.Id, true) + `"`
 	}
 	if e.Forward {
 		result += ` forward`

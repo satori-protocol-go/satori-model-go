@@ -24,21 +24,21 @@ func (e *MessageElementButton) Tag() string {
 func (e *MessageElementButton) Stringify() string {
 	result := "<" + e.Tag()
 	if e.Id != "" {
-		result += ` id="` + e.Id + `"`
+		result += ` id="` + escape(e.Id, true) + `"`
 	}
 	if e.Type != "" {
-		result += ` type="` + e.Type + `"`
+		result += ` type="` + escape(e.Type, true) + `"`
 	}
 	if e.Href != "" {
-		result += ` href="` + e.Href + `"`
+		result += ` href="` + escape(e.Href, true) + `"`
 	}
 	if e.Text != "" {
-		result += ` text="` + e.Text + `"`
+		result += ` text="` + escape(e.Text, true) + `"`
 	}
 	if e.Theme != "" {
-		result += ` theme="` + e.Theme + `"`
+		result += ` theme="` + escape(e.Theme, true) + `"`
 	}
-	return result + " />"
+	return result + "/>"
 }
 
 func (e *MessageElementButton) Parse(n *html.Node) (MessageElement, error) {
