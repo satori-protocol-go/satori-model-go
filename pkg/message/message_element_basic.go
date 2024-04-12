@@ -16,7 +16,7 @@ func (e *MessageElementText) Tag() string {
 }
 
 func (e *MessageElementText) Stringify() string {
-	return e.Content
+	return escape(e.Content, true)
 }
 
 func (e *MessageElementText) Parse(n *html.Node) (MessageElement, error) {
@@ -33,6 +33,8 @@ func (e *MessageElementText) Parse(n *html.Node) (MessageElement, error) {
 
 type MessageElementAt struct {
 	*noAliasMessageElement
+	*ChildrenMessageElement
+	*ExtendAttributes
 	Id   string
 	Name string //	收发	目标用户的名称
 	Role string //	收发	目标角色
@@ -44,34 +46,52 @@ func (e *MessageElementAt) Tag() string {
 }
 
 func (e *MessageElementAt) Stringify() string {
-	result := "<" + e.Tag()
+	result := ""
 	if e.Id != "" {
-		result += ` id="` + e.Id + `"`
+		result += ` id="` + escape(e.Id, true) + `"`
 	}
 	if e.Name != "" {
-		result += ` name="` + e.Name + `"`
+		result += ` name="` + escape(e.Name, true) + `"`
 	}
 	if e.Role != "" {
-		result += ` role="` + e.Role + `"`
+		result += ` role="` + escape(e.Role, true) + `"`
 	}
 	if e.Type != "" {
-		result += ` type="` + e.Type + `"`
+		result += ` type="` + escape(e.Type, true) + `"`
 	}
-	return result + " />"
+	result += e.stringifyAttributes()
+	childrenStr := e.stringifyChildren()
+	if childrenStr == "" {
+		return `<` + e.Tag() + result + `/>`
+	}
+	return `<` + e.Tag() + result + `>` + childrenStr + `</` + e.Tag() + `>`
 }
 
 func (e *MessageElementAt) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
-	return &MessageElementAt{
+	result := &MessageElementAt{
 		Id:   attrMap["id"],
 		Name: attrMap["name"],
 		Role: attrMap["role"],
 		Type: attrMap["type"],
-	}, nil
+	}
+	for key, value := range attrMap {
+		if key != "id" && key != "name" && key != "role" && key != "type" {
+			result.ExtendAttributes = result.AddAttribute(key, value)
+		}
+	}
+	children, err := result.parseChildren(n)
+	if err != nil {
+		return nil, err
+	}
+	result.ChildrenMessageElement = children
+	return result, nil
 }
 
 type MessageElementSharp struct {
 	*noAliasMessageElement
+	*ChildrenMessageElement
+	*ExtendAttributes
 	Id   string //收发	目标频道的 ID
 	Name string //收发	目标频道的名称
 }
@@ -81,26 +101,44 @@ func (e *MessageElementSharp) Tag() string {
 }
 
 func (e *MessageElementSharp) Stringify() string {
-	result := "<" + e.Tag()
+	result := ""
 	if e.Id != "" {
-		result += ` id="` + e.Id + `"`
+		result += ` id="` + escape(e.Id, true) + `"`
 	}
 	if e.Name != "" {
-		result += ` name="` + e.Name + `"`
+		result += ` name="` + escape(e.Name, true) + `"`
 	}
-	return result + " />"
+	result += e.stringifyAttributes()
+	childrenStr := e.stringifyChildren()
+	if childrenStr == "" {
+		return `<` + e.Tag() + result + `/>`
+	}
+	return `<` + e.Tag() + result + `>` + childrenStr + `</` + e.Tag() + `>`
 }
 
 func (e *MessageElementSharp) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
-	return &MessageElementSharp{
+	result := &MessageElementSharp{
 		Id:   attrMap["id"],
 		Name: attrMap["name"],
-	}, nil
+	}
+	for key, value := range attrMap {
+		if key != "id" && key != "name" && key != "role" && key != "type" {
+			result.ExtendAttributes = result.AddAttribute(key, value)
+		}
+	}
+	children, err := result.parseChildren(n)
+	if err != nil {
+		return nil, err
+	}
+	result.ChildrenMessageElement = children
+	return result, nil
 }
 
 type MessageElementA struct {
 	*noAliasMessageElement
+	*ChildrenMessageElement
+	*ExtendAttributes
 	Href string
 }
 
@@ -109,17 +147,33 @@ func (e *MessageElementA) Tag() string {
 }
 
 func (e *MessageElementA) Stringify() string {
-	result := "<" + e.Tag()
+	result := ""
 	if e.Href != "" {
-		result += ` href="` + e.Href + `"`
+		result += ` href="` + escape(e.Href, true) + `"`
 	}
-	return result + " />"
+	result += e.stringifyAttributes()
+	childrenStr := e.stringifyChildren()
+	if childrenStr == "" {
+		return `<` + e.Tag() + result + `/>`
+	}
+	return `<` + e.Tag() + result + `>` + childrenStr + `</` + e.Tag() + `>`
 }
 func (e *MessageElementA) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
-	return &MessageElementA{
+	result := &MessageElementA{
 		Href: attrMap["href"],
-	}, nil
+	}
+	for key, value := range attrMap {
+		if key != "href" {
+			result.ExtendAttributes = result.AddAttribute(key, value)
+		}
+	}
+	children, err := result.parseChildren(n)
+	if err != nil {
+		return nil, err
+	}
+	result.ChildrenMessageElement = children
+	return result, nil
 }
 
 func init() {

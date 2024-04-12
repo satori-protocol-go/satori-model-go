@@ -8,20 +8,16 @@ func Test(t *testing.T) {
 	for group, messages := range _getRawMessage() {
 		t.Logf("start test group: %s", group)
 		for _, message := range messages {
-			_, err := Parse(message.Raw)
+			elements, err := Parse(message)
 			if err != nil {
-				t.Fatalf("%s Parse error: %s", message.Raw, err)
+				t.Fatalf("%s Parse error: %s", message, err)
 			}
-			result, err := Stringify(message.Elements)
+			result, err := Stringify(elements)
 			if err != nil {
-				t.Fatalf("%s Stringify error: %s", message.Elements, err)
+				t.Fatalf("%s Stringify error: %s", elements, err)
 			}
-			if message.TargetRaw != "" {
-				if result != message.TargetRaw {
-					t.Fatalf("%s not eq %s", result, message.TargetRaw)
-				}
-			} else if result != message.Raw {
-				t.Fatalf("%s not eq %s", result, message.Raw)
+			if result != message {
+				t.Fatalf("%s not eq %s", result, message)
 			}
 		}
 	}

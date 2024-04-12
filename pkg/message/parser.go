@@ -1,8 +1,6 @@
 package message
 
 import (
-	"bytes"
-	"fmt"
 	"strings"
 
 	"golang.org/x/net/html"
@@ -42,7 +40,6 @@ var factory = &parsersStruct{
 }
 
 func RegsiterParserElement(parser MessageElementParser) {
-	fmt.Printf("set parser tag:[%s],with alias: %v\n", parser.Tag(), parser.Alias())
 	factory.set(parser.Tag(), parser.Parse)
 	if len(parser.Alias()) > 0 {
 		for _, tag := range parser.Alias() {
@@ -63,6 +60,13 @@ func parseHtmlNode(n *html.Node, callback func(e MessageElement)) error {
 				return err
 			}
 			callback(e)
+		} else {
+			e, err := ExtendParser.Parse(n)
+			if err != nil {
+				return err
+			}
+			callback(e)
+			parsed = true
 		}
 	} else if n.Type == html.TextNode {
 		content := strings.TrimSpace(n.Data)
@@ -89,7 +93,7 @@ func parseHtmlChildrenNode(n *html.Node, callback func(e MessageElement)) error 
 }
 
 func Parse(source string) ([]MessageElement, error) {
-	doc, _ := html.Parse(bytes.NewReader([]byte(source)))
+	doc := xhtmlParse(source)
 	var result []MessageElement
 	err := parseHtmlNode(doc, func(e MessageElement) {
 		if e != nil {
