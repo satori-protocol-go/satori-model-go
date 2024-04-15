@@ -3,10 +3,10 @@ package guildmember
 import "github.com/satori-protocol-go/satori-model-go/pkg/user"
 
 type GuildMember struct {
-	User   *user.User `json:"user"`
-	Nick   string     `json:"nick"`
-	Avatar string     `json:"avatar"`
-	JoinAt int64      `json:"join_at"`
+	User     *user.User `json:"user"`
+	Nick     string     `json:"nick"`
+	Avatar   string     `json:"avatar"`
+	JoinedAt int64      `json:"joined_at"`
 }
 
 type GuildMemberList struct {
