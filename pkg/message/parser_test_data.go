@@ -9,6 +9,7 @@ func _getRawMessage() map[string][]string {
 	raw_message["meta"] = _getMetaRawMessage()
 	raw_message["interact"] = _getInteractRawMessage()
 	raw_message["extend"] = _getExtendRawMessage()
+	raw_message["escape"] = _getEscapeRawMessage()
 	return raw_message
 }
 
@@ -69,5 +70,11 @@ func _getExtendRawMessage() []string {
 		`<img src="https://example.com">test</img>`,
 		`<file src="https://example.com" test2:test2>test</file>`,
 		`<test:test test="test">test</test:test>`,
+	}
+}
+
+func _getEscapeRawMessage() []string {
+	return []string{
+		`<author id="&lt;test&gt;" name="&quot;u&amp;i&quot;">&lt;film&amp;audio&gt;&quot;inner&quot;</author>`,
 	}
 }
