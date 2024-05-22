@@ -13,6 +13,7 @@ func Test(t *testing.T) {
 				t.Fatalf("%s Parse error: %s", message, err)
 			}
 			result, err := Stringify(elements)
+			t.Logf("result: %s", result)
 			if err != nil {
 				t.Fatalf("%s Stringify error: %s", elements, err)
 			}

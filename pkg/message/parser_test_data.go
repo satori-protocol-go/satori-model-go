@@ -52,7 +52,7 @@ func _getLayoutRawMessage() []string {
 
 func _getMetaRawMessage() []string {
 	return []string{
-		`<quote><author id="test" name="test">test</author>test</quote>`,
+		`<quote id="test" forward><author id="test" name="test">test</author>test</quote>`,
 		`<author id="test" name="test" avatar="https://example.com"/>`,
 	}
 }

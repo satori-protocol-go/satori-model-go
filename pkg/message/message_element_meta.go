@@ -3,6 +3,8 @@ package message
 import "golang.org/x/net/html"
 
 type MessageElementQuote struct {
+	Id      string
+	Forward bool
 	*noAliasMessageElement
 	*ChildrenMessageElement
 	*ExtendAttributes
@@ -13,7 +15,14 @@ func (e *MessageElementQuote) Tag() string {
 }
 
 func (e *MessageElementQuote) Stringify() string {
-	result := e.stringifyAttributes()
+	result := ""
+	if e.Id != "" {
+		result += ` id="` + escape(e.Id, true) + `"`
+	}
+	if e.Forward {
+		result += ` forward`
+	}
+	result += e.stringifyAttributes()
 	childrenStr := e.stringifyChildren()
 	if childrenStr == "" {
 		return `<` + e.Tag() + result + `/>`
@@ -23,9 +32,19 @@ func (e *MessageElementQuote) Stringify() string {
 
 func (e *MessageElementQuote) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
-	result := &MessageElementQuote{}
+	result := &MessageElementQuote{
+		Forward: false,
+	}
+	if id, ok := attrMap["id"]; ok {
+		result.Id = id
+	}
+	if forwardAttr, ok := attrMap["forward"]; ok {
+		result.Forward = forwardAttr == "" || forwardAttr == "true" || forwardAttr == "1"
+	}
 	for key, value := range attrMap {
-		result.ExtendAttributes = result.AddAttribute(key, value)
+		if key != "id" && key != "forward" {
+			result.ExtendAttributes = result.AddAttribute(key, value)
+		}
 	}
 	children, err := result.parseChildren(n)
 	if err != nil {
