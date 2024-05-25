@@ -7,20 +7,23 @@ import (
 	"github.com/satori-protocol-go/satori-model-go/pkg/user"
 )
 
+// 消息
 type Message struct {
-	Id       string                   `json:"id"`
-	Content  string                   `json:"content"`
-	Channel  *channel.Channel         `json:"channel,omitempty"`
-	Guild    *guild.Guild             `json:"guild,omitempty"`
-	Member   *guildmember.GuildMember `json:"member,omitempty"`
-	User     *user.User               `json:"user,omitempty"`
-	CreateAt int64                    `json:"create_at,omitempty"`
-	UpdateAt int64                    `json:"update_at,omitempty"`
+	Id       string                   `json:"id"`                  // 消息 ID
+	Content  string                   `json:"content"`             // 消息内容
+	Channel  *channel.Channel         `json:"channel,omitempty"`   // 频道对象
+	Guild    *guild.Guild             `json:"guild,omitempty"`     // 群组对象
+	Member   *guildmember.GuildMember `json:"member,omitempty"`    // 群组成员对象
+	User     *user.User               `json:"user,omitempty"`      // 用户对象
+	CreateAt int64                    `json:"create_at,omitempty"` // 消息发送的时间戳
+	UpdateAt int64                    `json:"update_at,omitempty"` // 消息修改的时间戳
 }
 
-type MessageList struct {
-	Data []Message `json:"data"`
-	Next string    `json:"next,omitempty"`
+// Message 双向分页列表
+type MessageBidiList struct {
+	Data []Message `json:"data"`           // 数据
+	Prev string    `json:"prev,omitempty"` // 上一页的令牌
+	Next string    `json:"next,omitempty"` // 下一页的令牌
 }
 
 func (m *Message) Decode(elements []MessageElement) error {

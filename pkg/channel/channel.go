@@ -1,22 +1,24 @@
 package channel
 
-type ChannelType uint64
+type ChannelType uint8 // 频道类型
 
 const (
-	CHANNEL_TYPE_TEXT     ChannelType = 0
-	CHANNEL_TYPE_VOICE    ChannelType = 1
-	CHANNEL_TYPE_CATEGORY ChannelType = 2
-	CHANNEL_TYPE_DIRECT   ChannelType = 3
+	ChannelTypeText     ChannelType = iota // 文本频道
+	ChannelTypeDirect                      // 私聊频道
+	ChannelTypeCategory                    // 分类频道
+	ChannelTypeVoice                       // 语音频道
 )
 
+// 频道
 type Channel struct {
-	Id       string      `json:"id"`
-	Type     ChannelType `json:"type"`
-	Name     string      `json:"name"`
-	ParentId string      `json:"parent_id"`
+	Id       string      `json:"id"`                  // 频道 ID
+	Type     ChannelType `json:"type"`                // 频道类型
+	Name     string      `json:"name,omitempty"`      // 频道名称
+	ParentId string      `json:"parent_id,omitempty"` // 父频道 ID
 }
 
+// Channel 分页列表
 type ChannelList struct {
-	Data []Channel `json:"data"`
-	Next string    `json:"next,omitempty"`
+	Data []Channel `json:"data"`           // 数据
+	Next string    `json:"next,omitempty"` // 下一页的令牌
 }
