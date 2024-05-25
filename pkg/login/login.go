@@ -2,19 +2,21 @@ package login
 
 import "github.com/satori-protocol-go/satori-model-go/pkg/user"
 
-type LoginStatus int32
+type LoginStatus uint8
 
 const (
-	OFFLINE    LoginStatus = 0
-	ONLINE     LoginStatus = 1
-	CONNECT    LoginStatus = 2
-	DISCONNECT LoginStatus = 3
-	RECONNECT  LoginStatus = 4
+	StatusOffline    LoginStatus = iota // 离线
+	StatusOnline                        // 在线
+	StatusConnect                       // 连接中
+	StatusDisconnect                    // 断开连接
+	StatusReconnect                     // 重新连接
 )
 
 type Login struct {
-	User     *user.User  `json:"user"`
-	SelfId   string      `json:"self_id"`
-	Platform string      `json:"platform"`
-	Status   LoginStatus `json:"status"`
+	User         *user.User  `json:"user,omitempty"`     // 用户对象
+	SelfId       string      `json:"self_id,omitempty"`  // 平台账号
+	Platform     string      `json:"platform,omitempty"` // 平台名称
+	Status       LoginStatus `json:"status"`             // 登录状态
+	Features     []string    `json:"features"`           // 平台特性 列表
+	ResourceUrls []string    `json:"resource_urls"`      // 代理路由 列表
 }
