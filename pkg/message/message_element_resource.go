@@ -51,12 +51,12 @@ type MessageElementImg struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement
 	*ExtendAttributes
-	Src     string
-	Title   string
-	Cache   bool
-	Timeout string //ms
-	Width   uint32
-	Height  uint32
+	Src     string // 收发 资源的 URL
+	Title   string // 收发 资源文件名称
+	Cache   bool   // 发 是否使用已缓存的文件
+	Timeout string // 发 下载文件的最长时间 (毫秒)
+	Width   uint32 // 收 图片宽度 (像素)
+	Height  uint32 // 收 图片高度 (像素)
 }
 
 func (e *MessageElementImg) Tag() string {
@@ -116,14 +116,14 @@ func (e *MessageElementImg) Parse(n *html.Node) (MessageElement, error) {
 	if w, ok := attrMap["width"]; ok {
 		width, e := strconv.Atoi(w)
 		if e != nil {
-			return nil, fmt.Errorf("width[%s] is illegal:%v", w, e)
+			return nil, fmt.Errorf("width '%s' is illegal: %v", w, e)
 		}
 		result.Width = uint32(width)
 	}
 	if h, ok := attrMap["height"]; ok {
 		height, e := strconv.Atoi(h)
 		if e != nil {
-			return nil, fmt.Errorf("height[%s] is illegal:%v", h, e)
+			return nil, fmt.Errorf("height '%s' is illegal: %v", h, e)
 		}
 		result.Height = uint32(height)
 	}
@@ -144,12 +144,12 @@ type MessageElementAudio struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement
 	*ExtendAttributes
-	Src      string
-	Title    string
-	Cache    bool
-	Timeout  string //ms
-	Duration uint32
-	Poster   string
+	Src      string // 收发 资源的 URL
+	Title    string // 收发 资源文件名称
+	Cache    bool   // 发 是否使用已缓存的文件
+	Timeout  string // 发 下载文件的最长时间 (毫秒)
+	Duration uint32 // 收 音频长度 (秒)
+	Poster   string // 收发 音频封面 URL
 }
 
 func (e *MessageElementAudio) Tag() string {
@@ -210,7 +210,7 @@ func (e *MessageElementAudio) Parse(n *html.Node) (MessageElement, error) {
 	if d, ok := attrMap["duration"]; ok {
 		duration, e := strconv.Atoi(d)
 		if e != nil {
-			return nil, fmt.Errorf("duration[%s] is illegal:%v", d, e)
+			return nil, fmt.Errorf("duration '%s' is illegal: %v", d, e)
 		}
 		result.Duration = uint32(duration)
 	}
@@ -234,14 +234,14 @@ type MessageElementVideo struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement
 	*ExtendAttributes
-	Src      string
-	Title    string
-	Cache    bool
-	Timeout  string //ms
-	Width    uint32
-	Height   uint32
-	Duration uint32
-	Poster   string
+	Src      string // 收发 资源的 URL
+	Title    string // 收发 资源文件名称
+	Cache    bool   // 发 是否使用已缓存的文件
+	Timeout  string // 发 下载文件的最长时间 (毫秒)
+	Width    uint32 // 收 视频宽度 (像素)
+	Height   uint32 // 收 视频高度 (像素)
+	Duration uint32 // 收 视频长度 (秒)
+	Poster   string // 收发 视频封面 URL
 }
 
 func (e *MessageElementVideo) Tag() string {
@@ -307,21 +307,21 @@ func (e *MessageElementVideo) Parse(n *html.Node) (MessageElement, error) {
 	if w, ok := attrMap["width"]; ok {
 		width, e := strconv.Atoi(w)
 		if e != nil {
-			return nil, fmt.Errorf("width[%s] is illegal:%v", w, e)
+			return nil, fmt.Errorf("width '%s' is illegal: %v", w, e)
 		}
 		result.Width = uint32(width)
 	}
 	if h, ok := attrMap["height"]; ok {
 		height, e := strconv.Atoi(h)
 		if e != nil {
-			return nil, fmt.Errorf("height[%s] is illegal:%v", h, e)
+			return nil, fmt.Errorf("height '%s' is illegal: %v", h, e)
 		}
 		result.Height = uint32(height)
 	}
 	if d, ok := attrMap["duration"]; ok {
 		duration, e := strconv.Atoi(d)
 		if e != nil {
-			return nil, fmt.Errorf("duration[%s] is illegal:%v", d, e)
+			return nil, fmt.Errorf("duration '%s' is illegal: %v", d, e)
 		}
 		result.Duration = uint32(duration)
 	}
@@ -345,11 +345,11 @@ type MessageElementFile struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement
 	*ExtendAttributes
-	Src     string
-	Title   string
-	Cache   bool
-	Timeout string //ms
-	Poster  string
+	Src     string // 收发 资源的 URL
+	Title   string // 收发 资源文件名称
+	Cache   bool   // 发 是否使用已缓存的文件
+	Timeout string // 发 下载文件的最长时间 (毫秒)
+	Poster  string // 收发 缩略图 URL
 }
 
 func (e *MessageElementFile) Tag() string {

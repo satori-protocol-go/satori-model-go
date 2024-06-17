@@ -13,10 +13,10 @@ const (
 )
 
 type Login struct {
-	User         *user.User  `json:"user,omitempty"`     // 用户对象
-	SelfId       string      `json:"self_id,omitempty"`  // 平台账号
-	Platform     string      `json:"platform,omitempty"` // 平台名称
-	Status       LoginStatus `json:"status"`             // 登录状态
-	Features     []string    `json:"features"`           // 平台特性 列表
-	ResourceUrls []string    `json:"resource_urls"`      // 代理路由 列表
+	User      *user.User  `json:"user,omitempty"`     // 用户对象
+	SelfId    string      `json:"self_id,omitempty"`  // 平台账号
+	Platform  string      `json:"platform,omitempty"` // 平台名称
+	Status    LoginStatus `json:"status"`             // 登录状态
+	Features  []string    `json:"features"`           // 平台特性 列表
+	ProxyUrls []string    `json:"proxy_urls"`         // 代理路由 列表
 }

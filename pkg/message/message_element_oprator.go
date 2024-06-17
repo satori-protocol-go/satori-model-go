@@ -6,17 +6,11 @@ type MessageElementButton struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement
 	*ExtendAttributes
-	//	id	string?	发	按钮的 ID
-	//
-	// type	string?	发	按钮的类型
-	// href	string?	发	按钮的链接
-	// text	string?	发	待输入文本
-	// theme	string?	发	按钮的样式
-	Id    string
-	Type  string
-	Href  string
-	Text  string
-	Theme string
+	Id    string // 发 按钮的 ID
+	Type  string // 发 按钮的类型
+	Href  string // 发 按钮的链接
+	Text  string // 发 待输入文本
+	Theme string // 发 按钮的样式
 }
 
 func (e *MessageElementButton) Tag() string {

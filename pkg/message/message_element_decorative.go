@@ -180,8 +180,8 @@ func (e *MessageElementSpl) Parse(n *html.Node) (MessageElement, error) {
 }
 
 type MessageElementCode struct {
-	*ChildrenMessageElement
 	*noAliasMessageElement
+	*ChildrenMessageElement
 	*ExtendAttributes
 }
 
@@ -213,8 +213,8 @@ func (e *MessageElementCode) Parse(n *html.Node) (MessageElement, error) {
 }
 
 type MessageElementSup struct {
-	*ChildrenMessageElement
 	*noAliasMessageElement
+	*ChildrenMessageElement
 	*ExtendAttributes
 }
 
@@ -246,8 +246,8 @@ func (e *MessageElementSup) Parse(n *html.Node) (MessageElement, error) {
 }
 
 type MessageElementSub struct {
-	*ChildrenMessageElement
 	*noAliasMessageElement
+	*ChildrenMessageElement
 	*ExtendAttributes
 }
 
