@@ -18,18 +18,18 @@ func (e *noAliasMessageElement) Alias() []string {
 }
 
 type ChildrenMessageElement struct {
-	Children []MessageElement
+	children []MessageElement
 }
 
 func (e *ChildrenMessageElement) stringifyChildren() string {
 	if e == nil {
 		return ""
 	}
-	if len(e.Children) == 0 {
+	if len(e.children) == 0 {
 		return ""
 	}
 	var result string
-	for _, e := range e.Children {
+	for _, e := range e.children {
 		result += e.Stringify()
 	}
 	return result
@@ -44,23 +44,30 @@ func (e *ChildrenMessageElement) parseChildren(n *html.Node) (*ChildrenMessageEl
 		return nil, err
 	}
 	result := &ChildrenMessageElement{
-		Children: children,
+		children: children,
 	}
 	return result, nil
 }
 
+func (e *ChildrenMessageElement) GetChildren() []MessageElement {
+	if e == nil {
+		return nil
+	}
+	return e.children
+}
+
 type ExtendAttributes struct {
-	Attributes map[string]string
+	attributes map[string]string
 }
 
 func (e *ExtendAttributes) AddAttribute(key, value string) *ExtendAttributes {
 	result := e
 	if result == nil {
 		result = &ExtendAttributes{
-			Attributes: make(map[string]string),
+			attributes: make(map[string]string),
 		}
 	}
-	result.Attributes[key] = value
+	result.attributes[key] = value
 	return result
 }
 
@@ -68,16 +75,16 @@ func (e *ExtendAttributes) Get(key string) (string, bool) {
 	if e == nil {
 		return "", false
 	}
-	v, ok := e.Attributes[key]
+	v, ok := e.attributes[key]
 	return v, ok
 }
 
 func (e *ExtendAttributes) stringifyAttributes() string {
-	if e == nil || len(e.Attributes) == 0 {
+	if e == nil || len(e.attributes) == 0 {
 		return ""
 	}
 	var result string
-	for k, v := range e.Attributes {
+	for k, v := range e.attributes {
 		if v == "" {
 			result += " " + k
 		} else {
