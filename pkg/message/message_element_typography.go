@@ -54,11 +54,11 @@ func (e *MessageElmentP) Parse(n *html.Node) (MessageElement, error) {
 }
 
 type MessageElementMessage struct {
-	Id      string
-	Forward bool
 	*noAliasMessageElement
 	*ChildrenMessageElement
 	*ExtendAttributes
+	Id      string // 发 消息的 ID
+	Forward bool   // 发 是否为转发消息
 }
 
 func (e *MessageElementMessage) Tag() string {

@@ -6,11 +6,11 @@ type MessageElementExtend struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement
 	*ExtendAttributes
-	Type string
+	tag string
 }
 
 func (e *MessageElementExtend) Tag() string {
-	return e.Type
+	return e.tag
 }
 
 func (e *MessageElementExtend) Stringify() string {
@@ -26,7 +26,7 @@ func (e *MessageElementExtend) Stringify() string {
 func (e *MessageElementExtend) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
 	result := &MessageElementExtend{
-		Type: n.Data,
+		tag: n.Data,
 	}
 	for key, value := range attrMap {
 		result.ExtendAttributes = result.AddAttribute(key, value)

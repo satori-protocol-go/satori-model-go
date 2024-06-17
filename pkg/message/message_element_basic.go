@@ -35,10 +35,10 @@ type MessageElementAt struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement
 	*ExtendAttributes
-	Id   string
-	Name string //	收发	目标用户的名称
-	Role string //	收发	目标角色
-	Type string //	收发	特殊操作，例如 all 表示 @全体成员，here 表示 @在线成员
+	Id   string // 收发 目标用户的 ID
+	Name string // 收发 目标用户的名称
+	Role string // 收发 目标角色
+	Type string // 收发 特殊操作，例如 all 表示 @全体成员，here 表示 @在线成员
 }
 
 func (e *MessageElementAt) Tag() string {
@@ -92,8 +92,8 @@ type MessageElementSharp struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement
 	*ExtendAttributes
-	Id   string //收发	目标频道的 ID
-	Name string //收发	目标频道的名称
+	Id   string // 收发 目标频道的 ID
+	Name string // 收发 目标频道的名称
 }
 
 func (e *MessageElementSharp) Tag() string {
@@ -123,7 +123,7 @@ func (e *MessageElementSharp) Parse(n *html.Node) (MessageElement, error) {
 		Name: attrMap["name"],
 	}
 	for key, value := range attrMap {
-		if key != "id" && key != "name" && key != "role" && key != "type" {
+		if key != "id" && key != "name" {
 			result.ExtendAttributes = result.AddAttribute(key, value)
 		}
 	}
@@ -139,7 +139,7 @@ type MessageElementA struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement
 	*ExtendAttributes
-	Href string
+	Href string // 收发 链接的 URL
 }
 
 func (e *MessageElementA) Tag() string {

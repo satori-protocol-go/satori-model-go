@@ -3,11 +3,11 @@ package message
 import "golang.org/x/net/html"
 
 type MessageElementQuote struct {
-	Id      string
-	Forward bool
 	*noAliasMessageElement
 	*ChildrenMessageElement
 	*ExtendAttributes
+	Id      string // 发 消息的 ID
+	Forward bool   // 发 是否为转发消息
 }
 
 func (e *MessageElementQuote) Tag() string {
@@ -58,9 +58,9 @@ type MessageElementAuthor struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement
 	*ExtendAttributes
-	Id     string
-	Name   string
-	Avatar string
+	Id     string // 发 用户 ID
+	Name   string // 发 昵称
+	Avatar string // 发 头像 URL
 }
 
 func (e *MessageElementAuthor) Tag() string {
