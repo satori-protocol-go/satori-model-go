@@ -21,9 +21,9 @@ type Message struct {
 
 // Message 双向分页列表
 type MessageBidiList struct {
-	Data []Message `json:"data"`           // 数据
-	Prev string    `json:"prev,omitempty"` // 上一页的令牌
-	Next string    `json:"next,omitempty"` // 下一页的令牌
+	Data []*Message `json:"data"`           // 数据
+	Prev string     `json:"prev,omitempty"` // 上一页的令牌
+	Next string     `json:"next,omitempty"` // 下一页的令牌
 }
 
 func (m *Message) Decode(elements []MessageElement) error {

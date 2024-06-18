@@ -19,6 +19,6 @@ type Channel struct {
 
 // Channel 分页列表
 type ChannelList struct {
-	Data []Channel `json:"data"`           // 数据
-	Next string    `json:"next,omitempty"` // 下一页的令牌
+	Data []*Channel `json:"data"`           // 数据
+	Next string     `json:"next,omitempty"` // 下一页的令牌
 }

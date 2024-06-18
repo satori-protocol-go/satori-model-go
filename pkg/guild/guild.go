@@ -9,6 +9,6 @@ type Guild struct {
 
 // Guild 分页列表
 type GuildList struct {
-	Data []Guild `json:"data"`           // 数据
-	Next string  `json:"next,omitempty"` // 下一页的令牌
+	Data []*Guild `json:"data"`           // 数据
+	Next string   `json:"next,omitempty"` // 下一页的令牌
 }
