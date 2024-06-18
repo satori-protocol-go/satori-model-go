@@ -20,6 +20,10 @@ func (e *MessageElmentBr) Parse(n *html.Node) (MessageElement, error) {
 	return &MessageElmentBr{}, nil
 }
 
+func (e *MessageElmentBr) GetChildren() []MessageElement {
+	return nil
+}
+
 type MessageElmentP struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement

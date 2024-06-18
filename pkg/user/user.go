@@ -11,6 +11,6 @@ type User struct {
 
 // User 分页列表
 type UserList struct {
-	Data []User `json:"data"`           // 数据
-	Next string `json:"next,omitempty"` // 下一页的令牌
+	Data []*User `json:"data"`           // 数据
+	Next string  `json:"next,omitempty"` // 下一页的令牌
 }

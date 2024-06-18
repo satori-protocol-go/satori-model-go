@@ -8,6 +8,6 @@ type GuildRole struct {
 
 // GuildRole 分页列表
 type GuildRoleList struct {
-	Data []GuildRole `json:"data"`           // 数据
-	Next string      `json:"next,omitempty"` // 下一页的令牌
+	Data []*GuildRole `json:"data"`           // 数据
+	Next string       `json:"next,omitempty"` // 下一页的令牌
 }

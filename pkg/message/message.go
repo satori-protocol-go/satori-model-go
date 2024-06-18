@@ -21,9 +21,9 @@ type Message struct {
 
 // Message 双向分页列表
 type MessageBidiList struct {
-	Data []Message `json:"data"`           // 数据
-	Prev string    `json:"prev,omitempty"` // 上一页的令牌
-	Next string    `json:"next,omitempty"` // 下一页的令牌
+	Data []*Message `json:"data"`           // 数据
+	Prev string     `json:"prev,omitempty"` // 上一页的令牌
+	Next string     `json:"next,omitempty"` // 下一页的令牌
 }
 
 func (m *Message) Decode(elements []MessageElement) error {
@@ -40,4 +40,32 @@ func (m *Message) Encode() ([]MessageElement, error) {
 		return nil, nil
 	}
 	return Parse(m.Content)
+}
+
+// Select 选取特定的消息元素
+func Select(element MessageElement, tag string) []MessageElement {
+	var selected []MessageElement
+
+	if element.Tag() == tag {
+		selected = append(selected, element)
+	}
+
+	selected = selectFromSlide(element.GetChildren(), tag, selected)
+
+	return selected
+}
+
+// selectFromSlide 从列表中选取特定的消息元素
+func selectFromSlide(elements []MessageElement, tag string, selected []MessageElement) []MessageElement {
+	for _, element := range elements {
+		if element.Tag() == tag {
+			selected = append(selected, element)
+		}
+	}
+
+	for _, element := range elements {
+		selected = append(selected, selectFromSlide(element.GetChildren(), tag, selected)...)
+	}
+
+	return selected
 }

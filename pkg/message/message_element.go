@@ -8,6 +8,7 @@ type MessageElement interface {
 	Tag() string
 	Stringify() string
 	Alias() []string
+	GetChildren() []MessageElement
 }
 
 type noAliasMessageElement struct {
