@@ -41,3 +41,31 @@ func (m *Message) Encode() ([]MessageElement, error) {
 	}
 	return Parse(m.Content)
 }
+
+// Select 选取特定的消息元素
+func Select(element MessageElement, tag string) []MessageElement {
+	var selected []MessageElement
+
+	if element.Tag() == tag {
+		selected = append(selected, element)
+	}
+
+	selected = selectFromSlide(element.GetChildren(), tag, selected)
+
+	return selected
+}
+
+// selectFromSlide 从列表中选取特定的消息元素
+func selectFromSlide(elements []MessageElement, tag string, selected []MessageElement) []MessageElement {
+	for _, element := range elements {
+		if element.Tag() == tag {
+			selected = append(selected, element)
+		}
+	}
+
+	for _, element := range elements {
+		selected = append(selected, selectFromSlide(element.GetChildren(), tag, selected)...)
+	}
+
+	return selected
+}
