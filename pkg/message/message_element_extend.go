@@ -39,4 +39,17 @@ func (e *MessageElementExtend) Parse(n *html.Node) (MessageElement, error) {
 	return result, nil
 }
 
+func NewMessageElementExtend(tag string, attrs map[string]string, children ...MessageElement) MessageElement {
+	result := &MessageElementExtend{
+		tag: tag,
+	}
+	for key, value := range attrs {
+		result.ExtendAttributes = result.AddAttribute(key, value)
+	}
+	result.ChildrenMessageElement = &ChildrenMessageElement{
+		children: children,
+	}
+	return result
+}
+
 var ExtendParser = &MessageElementExtend{}
