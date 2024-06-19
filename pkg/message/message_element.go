@@ -57,6 +57,11 @@ func (e *ChildrenMessageElement) GetChildren() []MessageElement {
 	return e.children
 }
 
+func (e *ChildrenMessageElement) SetChildren(children []MessageElement) *ChildrenMessageElement {
+	e.children = children
+	return e
+}
+
 type ExtendAttributes struct {
 	attributes map[string]string
 }
@@ -70,6 +75,14 @@ func (e *ExtendAttributes) AddAttribute(key, value string) *ExtendAttributes {
 	}
 	result.attributes[key] = value
 	return result
+}
+
+func (e *ExtendAttributes) DelAttribute(key string) *ExtendAttributes {
+	if e == nil {
+		return nil
+	}
+	delete(e.attributes, key)
+	return e
 }
 
 func (e *ExtendAttributes) Get(key string) (string, bool) {
