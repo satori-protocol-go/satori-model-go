@@ -12,6 +12,7 @@ const (
 	StatusReconnect                     // 正在重新连接
 )
 
+// 登录信息
 type Login struct {
 	Sn       int64       `json:"sn"`                 // 序列号
 	Platform string      `json:"platform,omitempty"` // 平台名称
