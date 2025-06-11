@@ -4,37 +4,37 @@ import (
 	"golang.org/x/net/html"
 )
 
-type MessageElmentBr struct {
+type MessageElementBr struct {
 	*noAliasMessageElement
 }
 
-func (e *MessageElmentBr) Tag() string {
+func (e *MessageElementBr) Tag() string {
 	return "br"
 }
 
-func (e *MessageElmentBr) Stringify() string {
+func (e *MessageElementBr) Stringify() string {
 	return "<br/>"
 }
 
-func (e *MessageElmentBr) Parse(n *html.Node) (MessageElement, error) {
-	return &MessageElmentBr{}, nil
+func (e *MessageElementBr) Parse(n *html.Node) (MessageElement, error) {
+	return &MessageElementBr{}, nil
 }
 
-func (e *MessageElmentBr) GetChildren() []MessageElement {
+func (e *MessageElementBr) GetChildren() []MessageElement {
 	return nil
 }
 
-type MessageElmentP struct {
+type MessageElementP struct {
 	*noAliasMessageElement
 	*ChildrenMessageElement
 	*ExtendAttributes
 }
 
-func (e *MessageElmentP) Tag() string {
+func (e *MessageElementP) Tag() string {
 	return "p"
 }
 
-func (e *MessageElmentP) Stringify() string {
+func (e *MessageElementP) Stringify() string {
 	result := e.stringifyAttributes()
 	childrenStr := e.stringifyChildren()
 	if childrenStr == "" {
@@ -43,9 +43,9 @@ func (e *MessageElmentP) Stringify() string {
 	return "<" + e.Tag() + result + ">" + childrenStr + "</" + e.Tag() + ">"
 }
 
-func (e *MessageElmentP) Parse(n *html.Node) (MessageElement, error) {
+func (e *MessageElementP) Parse(n *html.Node) (MessageElement, error) {
 	attrMap := attrList2MapVal(n.Attr)
-	result := &MessageElmentP{}
+	result := &MessageElementP{}
 	for key, value := range attrMap {
 		result.ExtendAttributes = result.AddAttribute(key, value)
 	}
@@ -110,7 +110,7 @@ func (e *MessageElementMessage) Parse(n *html.Node) (MessageElement, error) {
 }
 
 func init() {
-	RegisterParserElement(&MessageElmentBr{})
-	RegisterParserElement(&MessageElmentP{})
+	RegisterParserElement(&MessageElementBr{})
+	RegisterParserElement(&MessageElementP{})
 	RegisterParserElement(&MessageElementMessage{})
 }
