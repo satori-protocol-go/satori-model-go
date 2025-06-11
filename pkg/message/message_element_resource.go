@@ -418,8 +418,8 @@ func (e *MessageElementFile) Parse(n *html.Node) (MessageElement, error) {
 }
 
 func init() {
-	RegsiterParserElement(&MessageElementImg{})
-	RegsiterParserElement(&MessageElementAudio{})
-	RegsiterParserElement(&MessageElementVideo{})
-	RegsiterParserElement(&MessageElementFile{})
+	RegisterParserElement(&MessageElementImg{})
+	RegisterParserElement(&MessageElementAudio{})
+	RegisterParserElement(&MessageElementVideo{})
+	RegisterParserElement(&MessageElementFile{})
 }

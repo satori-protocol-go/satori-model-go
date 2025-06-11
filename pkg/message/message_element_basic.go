@@ -181,8 +181,8 @@ func (e *MessageElementA) Parse(n *html.Node) (MessageElement, error) {
 }
 
 func init() {
-	RegsiterParserElement(&MessageElementText{})
-	RegsiterParserElement(&MessageElementAt{})
-	RegsiterParserElement(&MessageElementSharp{})
-	RegsiterParserElement(&MessageElementA{})
+	RegisterParserElement(&MessageElementText{})
+	RegisterParserElement(&MessageElementAt{})
+	RegisterParserElement(&MessageElementSharp{})
+	RegisterParserElement(&MessageElementA{})
 }

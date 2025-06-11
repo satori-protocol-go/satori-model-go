@@ -106,6 +106,6 @@ func (e *MessageElementAuthor) Parse(n *html.Node) (MessageElement, error) {
 	return result, nil
 }
 func init() {
-	RegsiterParserElement(&MessageElementQuote{})
-	RegsiterParserElement(&MessageElementAuthor{})
+	RegisterParserElement(&MessageElementQuote{})
+	RegisterParserElement(&MessageElementAuthor{})
 }

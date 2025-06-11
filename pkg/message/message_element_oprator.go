@@ -65,5 +65,5 @@ func (e *MessageElementButton) Parse(n *html.Node) (MessageElement, error) {
 }
 
 func init() {
-	RegsiterParserElement(&MessageElementButton{})
+	RegisterParserElement(&MessageElementButton{})
 }

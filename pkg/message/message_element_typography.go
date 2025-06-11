@@ -110,7 +110,7 @@ func (e *MessageElementMessage) Parse(n *html.Node) (MessageElement, error) {
 }
 
 func init() {
-	RegsiterParserElement(&MessageElmentBr{})
-	RegsiterParserElement(&MessageElmentP{})
-	RegsiterParserElement(&MessageElementMessage{})
+	RegisterParserElement(&MessageElmentBr{})
+	RegisterParserElement(&MessageElmentP{})
+	RegisterParserElement(&MessageElementMessage{})
 }

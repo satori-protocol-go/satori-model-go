@@ -39,7 +39,7 @@ var factory = &parsersStruct{
 	_storage: make(map[string]messageElementParserFunc),
 }
 
-func RegsiterParserElement(parser MessageElementParser) {
+func RegisterParserElement(parser MessageElementParser) {
 	factory.set(parser.Tag(), parser.Parse)
 	if len(parser.Alias()) > 0 {
 		for _, tag := range parser.Alias() {
