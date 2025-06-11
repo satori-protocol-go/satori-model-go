@@ -57,8 +57,22 @@ func (e *ChildrenMessageElement) GetChildren() []MessageElement {
 	return e.children
 }
 
-func (e *ChildrenMessageElement) SetChildren(children []MessageElement) *ChildrenMessageElement {
+func (e *ChildrenMessageElement) SetChildren(children []MessageElement) {
+	if e == nil {
+		e = &ChildrenMessageElement{
+			children: make([]MessageElement, 0),
+		}
+	}
 	e.children = children
+}
+
+func (e *ChildrenMessageElement) AddChildren(children []MessageElement) *ChildrenMessageElement {
+	if e == nil {
+		e = &ChildrenMessageElement{
+			children: make([]MessageElement, 0),
+		}
+	}
+	e.children = append(e.children, children...)
 	return e
 }
 
